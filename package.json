@@ -12,9 +12,11 @@
     "format": "prettier --write --plugin-search-dir=. src/**/*"
   },
   "devDependencies": {
+    "@jamesgopsill/ultimaker-client": "github:jamesgopsill/ultimaker-client",
     "@snowpack/plugin-svelte": "^3.7.0",
     "@snowpack/plugin-typescript": "^1.2.1",
     "@tsconfig/svelte": "^3.0.0",
+    "octoprint-client": "github:JamesGopsill/octoprint-client",
     "prettier": "^2.6.2",
     "prettier-plugin-svelte": "^2.7.0",
     "rollup": "^2.70.2",

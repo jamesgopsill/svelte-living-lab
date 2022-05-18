@@ -4,6 +4,9 @@
 	import Dummy from "./connectors/Dummy.svelte"
 	import machine from "./stores/machine-store"
 	import MachineAgent from "./MachineAgent.svelte"
+	import Octoprint from "./connectors/Octoprint.svelte"
+	import Ultimaker from "./connectors/Ultimaker.svelte"
+	import WebSerial from "./connectors/WebSerial.svelte"
 
 	const changeMachine = (event) => {
 		console.log(event.target.value)
@@ -48,11 +51,17 @@
 </FormGroup>
 
 {#if $machine.connectionType == MachineConnectionTypes.ULTIMAKER_API}
-	<p>Ultimaker API</p>
+	<Ultimaker />
+	<hr />
+	<MachineAgent />
 {:else if $machine.connectionType == MachineConnectionTypes.USB}
-	USB
+	<WebSerial />
+	<hr />
+	<MachineAgent />
 {:else if $machine.connectionType == MachineConnectionTypes.OCTOPRINT}
-	OCTOPRINT
+	<Octoprint />
+	<hr />
+	<MachineAgent />
 {:else if $machine.connectionType == MachineConnectionTypes.DUMMY}
 	<Dummy />
 	<MachineAgent />

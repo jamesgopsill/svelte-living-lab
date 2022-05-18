@@ -3,13 +3,15 @@
 	import { io } from "socket.io-client"
 	import type { Socket } from "socket.io-client"
 	import { MessageProtocols, MessageSubjects } from "./enums"
-	import type { Message } from "./interfaces";
+	import type { Message } from "./interfaces"
+	import machine from "./stores/machine-store"
 
 	let token = ""
 	let group = ""
 	let socket: Socket
 	let isConnected = false
 	let interval: any
+	let jobs = []
 
 	const connect = () => {
 
@@ -46,22 +48,63 @@
 		console.log("Handling Connect")
 		isConnected = true
 		socket = this
+		// Setting up the interval for looking for a job
 		interval = setInterval(() => {
-			console.log("loop")
-		}, 3000)
-		// TODO: add the machine logic
+			console.log(`|- MachineAgent: loop, Available: ${$machine.available}`)
+			if ($machine.available) {
+				const msg: Message = {
+				fromId: socket.id,
+				toId: "",
+				subject: MessageSubjects.MACHINE_IS_LOOKING_FOR_JOBS,
+					body: {
+						machineType: $machine.machineType,
+					},
+				}
+				socket.emit(MessageProtocols.ALL_JOBS, msg)
+				setTimeout(() => {
+					selectJob()
+				}, 3000)
+			}
+		}, 5000)
 	}
 
 	const handleDirect = function(this: Socket, msg: Message) {
-		console.log("Direct Message")
+		console.log("|- MachineAgent: Received a direct message")
+		if (msg.subject == MessageSubjects.JOB_IS_AVAILABLE) {
+			jobs.push(msg)
+		}
+		if (msg.subject == MessageSubjects.JOB_HAS_ACCEPTED_MACHINES_OFFER) {
+			console.log("|- MachineAgent: Passing on the GCode")
+			jobs = []
+			$machine.gcode = msg.body.gcode
+		}
+		if (msg.subject == MessageSubjects.JOB_HAS_DECLINED_MACHINES_OFFER) {
+			jobs = []
+		}
 	}
 
 	const handleConnectionError = function(this: Socket) {
 		console.log("Connection Error")
 	}
+
+	const selectJob = () => {
+		// Pick the first job from the list
+		if (jobs.length > 0) {
+			const job = jobs[0]
+			const msg: Message = {
+				fromId: socket.id,
+				toId: job.fromId,
+				subject: MessageSubjects.MACHINE_HAS_CHOSEN_A_JOB,
+				body: {
+					machineType: $machine.machineType,
+				},
+			}
+			socket.emit(MessageProtocols.DIRECT, msg)
+		}
+	}
 </script>
 
-<h5>Broker Machine</h5>
+<h5>Broker the Machine</h5>
 
 <dl class="row">
 	<dt class="col-sm-3">Socket Status:</dt>

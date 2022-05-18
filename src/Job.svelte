@@ -4,6 +4,7 @@
 	import type { Socket } from "socket.io-client"
 	import { MachineTypes, MessageProtocols, JobStates, MessageSubjects } from "./enums"
 	import type { Message } from "./interfaces"
+import Machine from "./Machine.svelte";
 
 	let token = ""
 	let group = ""
@@ -69,6 +70,7 @@
 	const handleConnect = function(this: Socket): void {
 		isConnectDisabled = true
 		isDisconnectDisabled = false
+		status = JobStates.AVAILABLE
 		socket = this
 	}
 
@@ -86,7 +88,8 @@
 		// Respond to the machine
 		if (
 			msg.subject == MessageSubjects.MACHINE_IS_LOOKING_FOR_JOBS &&
-			status == JobStates.AVAILABLE
+			status == JobStates.AVAILABLE &&
+			gcodes[msg.body.machineType]
 		) {
 			const response: Message = {
 				toId: msg.fromId,
@@ -159,6 +162,11 @@
 				if (g.includes("Ultimaker 3 Extended")) {
 					gcodes[MachineTypes.UM3E] = g
 				}
+				if (g.includes("PRINTER_MODEL_MINI")) {
+					gcodes[MachineTypes.PRUSA_MINI] = g
+				}
+				// For testing. place the gcode for the dummy printer to pick up
+				gcodes[MachineTypes.DUMMY] = g
 			};
 			reader.readAsText(files[0])
 		}
