@@ -1,25 +1,37 @@
 <script lang="ts">
-	import { FormGroup, Label, Input } from "sveltestrap"
-	import { OctoPrintClient } from "octoprint-client"
+	import {
+		FormGroup,
+		Input,
+		Button,
+		Row,
+		Col,
+		InputGroup,
+		InputGroupText,
+	} from "sveltestrap"
+	import { OctoPrintClient, JobCommands } from "octoprint-client"
 	import machine from "../stores/machine-store"
 
-	let url = ""
-	let token = ""
-	let stats: any = {
-		state: {
-			text: ""
-		},
-		temperature: {
-			bed: {
-				actual: 0.0,
-				target: 0.0,
+	const defaultStats = () => {
+		return {
+			state: {
+				text: "Not Connected",
 			},
-			tool0: {
-				actual: 0.0,
-				target: 0.0,
-			}
+			temperature: {
+				bed: {
+					actual: 0.0,
+					target: 0.0,
+				},
+				tool0: {
+					actual: 0.0,
+					target: 0.0,
+				},
+			},
 		}
 	}
+
+	let url = "" // URL of Octopi
+	let token = "" // API token
+	let stats: any = defaultStats()
 	let statsInterval: any
 	let client: OctoPrintClient = null
 	let connect = false
@@ -37,21 +49,7 @@
 		console.log("|- Disconnecting from Octoprint")
 		client = null
 		clearInterval(statsInterval)
-		stats = {
-			state: {
-				text: ""
-			},
-			temperature: {
-				bed: {
-					actual: 0.0,
-					target: 0.0,
-				},
-				tool0: {
-					actual: 0.0,
-					target: 0.0,
-				}
-			}
-		}
+		stats = defaultStats()
 	}
 
 	$: if ($machine.gcode) {
@@ -63,69 +61,105 @@
 				$machine.gcode = ""
 			})
 		})
-		
 	}
 
-	$: if (files) {
-		const reader = new FileReader()
-		reader.onload = function(event) {
-			//@ts-ignore
-			let g: string = event.target.result
-			files = null
-			// Should put checks here.
-			client.uploadFileToLocal(g).then(() => {
-				console.log("gcode uploaded")
-				client.selectFileAndPrint("octoprint-client.gcode").then(() => {
-					console.log("print command issued")
+	const submitGcode = () => {
+		if (files) {
+			const reader = new FileReader()
+			reader.onload = function (event) {
+				//@ts-ignore
+				let g: string = event.target.result
+				// Should put checks here.
+				client.uploadFileToLocal(g).then(() => {
+					console.log("gcode uploaded")
+					client.selectFileAndPrint("octoprint-client.gcode").then(() => {
+						console.log("print command issued")
+					})
 				})
-			})
-		};
-		reader.readAsText(files[0])
+			}
+			reader.readAsText(files[0])
+		}
 	}
 
-
+	const cancel = () => {
+		if (client) {
+			client.issueJobCommand(JobCommands.CANCEL)
+		}
+	}
 </script>
 
-<h4>Connect</h4>
+<h5>Summary</h5>
+
+<hr />
 
 <dl class="row">
-	<dt class="col-sm-4">Machine Status:</dt>
-	<dd class="col-sm-8">{stats.state.text}</dd>
-	<dt class="col-sm-4">Bed Temperature:</dt>
-	<dd class="col-sm-8">{stats.temperature.bed.actual} ({stats.temperature.bed.target})</dd>
-	<dt class="col-sm-4">Extruder Temperature:</dt>
-	<dd class="col-sm-8">{stats.temperature.tool0.actual} ({stats.temperature.tool0.target})</dd>
-	<dt class="col-sm-4">Machine Available:</dt>
-	<dd class="col-sm-8">{$machine.available}</dd>
+	<dt class="col-3">Machine Status:</dt>
+	<dd class="col-3">{stats.state.text}</dd>
+	<dt class="col-3">Machine Available:</dt>
+	<dd class="col-3">{$machine.available}</dd>
+	<dt class="col-3">Bed Temperature:</dt>
+	<dd class="col-3">
+		{stats.temperature.bed.actual} ({stats.temperature.bed.target})
+	</dd>
+	<dt class="col-3">Extruder Temperature:</dt>
+	<dd class="col-3">
+		{stats.temperature.tool0.actual} ({stats.temperature.tool0.target})
+	</dd>
 </dl>
 
+<h5>Connect</h5>
+
 <FormGroup>
-	<Label size="sm">URL</Label>
-	<Input 
-		type="text" 
-		bind:value={url}
-		invalid={!url} 
-		feedback="URL Required"
+	<InputGroup>
+		<InputGroupText>URL</InputGroupText>
+		<Input
+			type="text"
+			bind:value={url}
+			invalid={!url}
+			feedback="URL Required"
+		/>
+	</InputGroup>
+</FormGroup>
+
+<FormGroup>
+	<InputGroup>
+		<InputGroupText>API Key</InputGroupText>
+		<Input
+			type="text"
+			bind:value={token}
+			invalid={!token}
+			feedback="API Key Required"
+		/>
+	</InputGroup>
+</FormGroup>
+
+<FormGroup>
+	<Input
+		bind:checked={connect}
+		type="switch"
+		label="Toggle to connect/disconnect printer"
+	/>
+	<Input
+		bind:checked={$machine.available}
+		type="switch"
+		label="Toggle to make available to network"
 	/>
 </FormGroup>
 
-<FormGroup>
-	<Label size="sm">API Key</Label>
-	<Input 
-		type="text" 
-		bind:value={token}
-		invalid={!token} 
-		feedback="API Key Required"
-	/>
-</FormGroup>
+<hr />
 
-<FormGroup>
-	<Input bind:checked={connect} type="switch" label="Toggle to connect to printer" />
-	<Input bind:checked={$machine.available} type="switch" label="Toggle to make available" />
-</FormGroup>
+<h5>Controls</h5>
 
-<FormGroup>
-	<Label>Submit G-Code Directly</Label>
-	<input class="form-control" type="file" bind:files />
-</FormGroup>
-  
+<Row>
+	<Col>
+		<FormGroup>
+			<input class="form-control" type="file" bind:files />
+		</FormGroup>
+	</Col>
+	<Col>
+		<FormGroup>
+			<Button color="primary" on:click={submitGcode}>Submit G-Code</Button>
+			<Button color="danger" on:click={cancel}>Cancel Print</Button>
+		</FormGroup>
+	</Col>
+</Row>

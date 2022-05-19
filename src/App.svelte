@@ -1,7 +1,13 @@
 <script lang="ts">
-	import { Navbar, NavbarBrand, Container, TabContent, TabPane } from "sveltestrap"
+	import {
+		Navbar,
+		NavbarBrand,
+		Container,
+		TabContent,
+		TabPane,
+	} from "sveltestrap"
 	import Job from "./Job.svelte"
-	import Machine from  "./Machine.svelte"
+	import Machine from "./Machine.svelte"
 </script>
 
 <Navbar color="light" light={true} expand="md" class="mb-1">

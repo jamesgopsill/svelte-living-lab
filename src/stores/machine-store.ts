@@ -12,5 +12,5 @@ export default writable<Machine>({
 	machineType: null,
 	connectionType: null,
 	available: false,
-	gcode: ""
+	gcode: "",
 })

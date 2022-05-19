@@ -1,5 +1,14 @@
 <script lang="ts">
-	import { FormGroup, Input, Label } from "sveltestrap"
+	import {
+		FormGroup,
+		Input,
+		Icon,
+		Row,
+		Col,
+		InputGroup,
+		InputGroupText,
+		Button,
+	} from "sveltestrap"
 	import machine from "../stores/machine-store"
 
 	let baudrate: number = 115200
@@ -8,8 +17,8 @@
 	let reader: any
 	let writer: any
 	let ok: boolean
-	let firmware: string = ""
-	let uuid: string = ""
+	let firmware: string = "-"
+	let uuid: string = "-"
 	let files: any
 	let cancelPrintFlag = false
 	let status = "not connected"
@@ -24,10 +33,10 @@
 			}
 
 			// Request the serial port
-			//@ts-ignore 
+			//@ts-ignore
 			const port = await navigator.serial
-			.requestPort()
-			.catch((err: any) => console.log(err))
+				.requestPort()
+				.catch((err: any) => console.log(err))
 
 			status = "connecting"
 
@@ -47,14 +56,12 @@
 			// Get firmware details
 			await writer.write("M115\n")
 			status = "connected"
-			
 		} else {
 			// disconnect
 		}
 	}
 
 	const readLoop = async (port: any) => {
-		
 		decoder = new TextDecoderStream()
 		port.readable.pipeTo(decoder.writable)
 
@@ -114,13 +121,13 @@
 		}
 		if (line.startsWith("FIRMWARE_NAME")) {
 			let elements = line.split(" SOURCE_CODE_URL")
-			firmware = (elements[0].replace("FIRMWARE_NAME:", ""))
+			firmware = elements[0].replace("FIRMWARE_NAME:", "")
 			elements = line.split("UUID:")
 			uuid = elements[1]
 		}
 	}
 
-	const wait = (ms: number) => new Promise((r, j) => setTimeout(r, ms))
+	const wait = (ms: number) => new Promise((r, _) => setTimeout(r, ms))
 
 	const print = async (gcode: string) => {
 		// pause requesting for updates
@@ -179,15 +186,17 @@
 		console.log("Serial Print Complete")
 	}
 
-	$: if (files && writer) {
-		const reader = new FileReader()
-		reader.onload = function(event) {
-			//@ts-ignore
-			let g: string = event.target.result
-			print(g)
-			files = null
+	const submitGcode = () => {
+		if (files && writer) {
+			const reader = new FileReader()
+			reader.onload = function (event) {
+				//@ts-ignore
+				let g: string = event.target.result
+				print(g)
+				files = null
+			}
+			reader.readAsText(files[0])
 		}
-		reader.readAsText(files[0])
 	}
 
 	$: if ($machine.gcode && writer) {
@@ -195,39 +204,124 @@
 		print($machine.gcode)
 		$machine.gcode = ""
 	}
-
 </script>
 
-<h4>Prusa through WebUSB (Chrome or Edge required)</h4>
+<h5>Prusa through WebUSB (Chrome or Edge required)</h5>
 
 <dl class="row">
-	<dt class="col-sm-4">Firmware:</dt>
-	<dd class="col-sm-8">{firmware}</dd>
-	<dt class="col-sm-4">UUID:</dt>
-	<dd class="col-sm-8">{uuid}</dd>
-	<dt class="col-sm-4">Status:</dt>
-	<dd class="col-sm-8">{status}</dd>
+	<dt class="col-3">Firmware:</dt>
+	<dd class="col-3">{firmware}</dd>
+	<dt class="col-3">UUID:</dt>
+	<dd class="col-3">{uuid}</dd>
+	<dt class="col-3">Status:</dt>
+	<dd class="col-3">{status}</dd>
 </dl>
 
 <FormGroup>
-	<Label size="sm">Baud Rate</Label>
-	<Input 
-		type="text" 
-		bind:value={baudrate}
-		invalid={!baudrate} 
-		feedback="Baud Rate Required"
-	/>
+	<InputGroup>
+		<InputGroupText>Baud Rate</InputGroupText>
+		<Input
+			type="text"
+			bind:value={baudrate}
+			invalid={!baudrate}
+			feedback="Baud Rate Required"
+		/>
+	</InputGroup>
 </FormGroup>
 
 <FormGroup>
-	<Input bind:checked={connected} on:change={toggle} type="switch" label="Toggle switch to connect/disconnect printer" />
-	<Input bind:checked={cancelPrintFlag} type="switch" label="Toggle to cancel print" />
-	<Input bind:checked={$machine.available} type="switch" label="Toggle to make available" />
+	<Input
+		bind:checked={connected}
+		on:change={toggle}
+		type="switch"
+		label="Toggle to connect/disconnect printer"
+	/>
+
+	<Input
+		bind:checked={$machine.available}
+		type="switch"
+		label="Toggle to make available to network"
+	/>
 </FormGroup>
 
 <hr />
 
+<h5>Controls</h5>
+
 <FormGroup>
-	<Label>Submit G-Code Directly</Label>
-	<input class="form-control" type="file" bind:files />
+	<Button
+		color="primary"
+		on:click={() => {
+			if (writer) {
+				writer.write("G28\n")
+			}
+		}}><Icon name="house-fill" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (writer) {
+				writer.write("G91\nG1 X-1\n")
+			}
+		}}><Icon name="arrow-left" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (writer) {
+				writer.write("G91\nG1 Y1\n")
+			}
+		}}><Icon name="arrow-up" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (writer) {
+				writer.write("G91\nG1 Y-1\n")
+			}
+		}}><Icon name="arrow-down" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (writer) {
+				writer.write("G91\nG1 X1\n")
+			}
+		}}><Icon name="arrow-right" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (writer) {
+				writer.write("G91\nG1 Z1\n")
+			}
+		}}><Icon name="arrow-bar-up" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (writer) {
+				writer.write("G91\nG1 Z-1\n")
+			}
+		}}><Icon name="arrow-bar-down" /></Button
+	>
+</FormGroup>
+<Row>
+	<Col>
+		<FormGroup>
+			<input class="form-control" type="file" bind:files />
+		</FormGroup>
+	</Col>
+	<Col>
+		<FormGroup>
+			<Button color="primary" on:click={submitGcode}>Submit G-Code</Button>
+		</FormGroup>
+	</Col>
+</Row>
+<FormGroup>
+	<Input
+		bind:checked={cancelPrintFlag}
+		type="switch"
+		label="Toggle to cancel print"
+	/>
 </FormGroup>
