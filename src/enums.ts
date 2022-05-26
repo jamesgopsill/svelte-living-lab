@@ -10,6 +10,7 @@ export enum MessageProtocols {
 
 export enum MachineTypes {
 	PRUSA_MINI = "PRUSA_MINI",
+	PRUSA_MK3S = "PRUSA_MK3S",
 	UM3E = "UM3E",
 	UMS3 = "UMS3",
 	DUMMY = "DUMMY",

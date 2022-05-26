@@ -26,8 +26,18 @@ export const connect = async function(this: WebSerialPrinter) {
 	this.writer = encoder.writable.getWriter()
 
 	// Get firmware details
-	await this.writer.write("M115\n")
-	await this.writer.write("M105\n")
+	if (this.printerType == "PRUSA_MINI") {
+		await this.writer.write("M115\n")
+		await this.writer.write("M105\n")
+	}
+
+	if (this.printerType == "PRUSA_MK3S") {
+		//console.log("Prusa MK3S commands")
+		setTimeout(async () => {
+			console.log("Prusa MK3S commands")
+			await this.writer.write("M115\n")
+		}, 2000)
+	}
 
 	this.status.update(v => "connected")
 	this.isConnected = true

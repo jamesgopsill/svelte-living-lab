@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { FormGroup, Input, Label, Button } from "sveltestrap"
+	import { FormGroup, Input, Label, Button, InputGroup, InputGroupText, Icon } from "sveltestrap"
 	import machine from "../stores/machine-store"
 	import { WebSerialPrinter } from "../web-serial-printer"
 
 	let files: any
-	let printer = new WebSerialPrinter()
+	let printer = new WebSerialPrinter("PRUSA_MK3S")
 	printer.baud = 115200
 	let { firmware, sourceCodeUrl, status, protocolVersion, uuid, machineType, extruderTempActual, extruderTempDemand, bedTempActual, bedTempDemand } = printer
 
@@ -40,7 +40,7 @@
 	}
 </script>
 
-<h5>Prusa through WebUSB (Chrome or Edge required)</h5>
+<h5>Prusa Mini through WebUSB (Chrome or Edge required)</h5>
 
 <dl class="row">
 	<dt class="col-sm-3">Firmware:</dt>
@@ -55,25 +55,71 @@
 	<dd class="col-sm-3">{$uuid}</dd>
 	<dt class="col-sm-3">Machine Type:</dt>
 	<dd class="col-sm-3">{$machineType}</dd>
-	<dt class="col-sm-3">Extruder Temp:</dt>
-	<dd class="col-sm-3">{$extruderTempActual} | {$extruderTempDemand}</dd>
-	<dt class="col-sm-3">Bed Temp:</dt>
-	<dd class="col-sm-3">{$bedTempActual} | {$bedTempDemand}</dd>
 </dl>
 
+
 <FormGroup>
-	<Label size="sm">Baud Rate</Label>
-	<Input 
-		type="text" 
-		bind:value={printer.baud}
-		invalid={!printer.baud} 
-		feedback="Baud Rate Required"
-	/>
+	<InputGroup>
+		<InputGroupText>Baud Rate</InputGroupText>
+		<Input
+			type="text" 
+			bind:value={printer.baud}
+			invalid={!printer.baud} 
+			feedback="Baud Rate Required"
+		/>
+	</InputGroup>
 </FormGroup>
 
 <FormGroup>
 	<Input bind:checked={printer.isConnected} on:change={toggle} type="switch" label="Toggle switch to connect/disconnect printer" />
 	<Input bind:checked={$machine.available} type="switch" label="Toggle to make available" />
+</FormGroup>
+
+<h5>Controls</h5>
+
+<FormGroup>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (printer.writer) printer.sendGcode(["G28"])
+		}}><Icon name="house-fill" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (printer.writer) printer.sendGcode(["G91", "G1 X-5"])
+		}}><Icon name="arrow-left" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (printer.writer) printer.sendGcode(["G91", "G1 Y5"])
+		}}><Icon name="arrow-up" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (printer.writer) printer.sendGcode(["G91", "G1 Y-5"])
+		}}><Icon name="arrow-down" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (printer.writer) printer.sendGcode(["G91", "G1 X5"])
+		}}><Icon name="arrow-right" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (printer.writer) printer.sendGcode(["G91", "G1 Z5"])
+		}}><Icon name="arrow-bar-up" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (printer.writer) printer.sendGcode(["G91", "G1 Z-5"])
+		}}><Icon name="arrow-bar-down" /></Button
+	>
 </FormGroup>
 
 <FormGroup>

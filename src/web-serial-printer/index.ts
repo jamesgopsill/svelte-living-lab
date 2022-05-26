@@ -5,6 +5,7 @@ import { read } from "./read"
 import { print } from "./print"
 import { cancelPrint } from "./cancel-print"
 import { writable } from "svelte/store"
+import { sendGcode } from "./send-gcode"
 
 export class WebSerialPrinter {
 
@@ -31,8 +32,11 @@ export class WebSerialPrinter {
 	writableStreamClosed: any
 	readableStreamClosed: any
 	log: string[] = ["", ""]
+	printerType: string
 
-	constructor() {}
+	constructor(type: string) {
+		this.printerType = type
+	}
 
 	connect = connect
 	disconnect = disconnect
@@ -41,5 +45,6 @@ export class WebSerialPrinter {
 	wait = (ms: number) => new Promise((r, _) => setTimeout(r, ms))
 	print = print
 	cancelPrint = cancelPrint
+	sendGcode = sendGcode
 
 }
