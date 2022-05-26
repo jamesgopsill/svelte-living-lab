@@ -38,10 +38,9 @@
 		printer.print($machine.gcode)
 		$machine.gcode = ""
 	}
-
 </script>
 
-<h4>Prusa through WebUSB (Chrome or Edge required)</h4>
+<h5>Prusa through WebUSB (Chrome or Edge required)</h5>
 
 <dl class="row">
 	<dt class="col-sm-3">Firmware:</dt>

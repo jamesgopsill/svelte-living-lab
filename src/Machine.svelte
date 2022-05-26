@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { FormGroup, Label, Input } from "sveltestrap"
+	import { FormGroup, Input, InputGroup, InputGroupText } from "sveltestrap"
 	import { MachineConnectionTypes, MachineTypes } from "./enums"
 	import Dummy from "./connectors/Dummy.svelte"
 	import machine from "./stores/machine-store"
@@ -8,7 +8,7 @@
 	import Ultimaker from "./connectors/Ultimaker.svelte"
 	import WebSerial from "./connectors/WebSerial.svelte"
 
-	const changeMachine = (event) => {
+	const changeMachine = (event: any) => {
 		console.log(event.target.value)
 		switch (event.target.value) {
 			case "1":
@@ -34,20 +34,23 @@
 				break
 			default:
 				break
-
 		}
 	}
 </script>
 
+<br />
+
 <FormGroup>
-	<Label>Select the machine/connection type</Label>
-	<Input type="select" name="select" on:change={changeMachine}>
-		<option value="1">Ultimaker 3 Extended (Ultimaker API)</option>
-		<option value="2">Ultimaker S3 (Ultimaker API)</option>
-		<option value="3">Prusa (WebUSB)</option>
-		<option value="4">Prusa (Octoprint)</option>
-		<option value="5">Dummy Printer</option>
-	</Input>
+	<InputGroup>
+		<InputGroupText>Select the machine/connection type</InputGroupText>
+		<Input type="select" name="select" on:change={changeMachine}>
+			<option value="1">Ultimaker 3 Extended (Ultimaker API)</option>
+			<option value="2">Ultimaker S3 (Ultimaker API)</option>
+			<option value="3">Prusa (WebUSB)</option>
+			<option value="4">Prusa (Octoprint)</option>
+			<option value="5">Dummy Printer</option>
+		</Input>
+	</InputGroup>
 </FormGroup>
 
 {#if $machine.connectionType == MachineConnectionTypes.ULTIMAKER_API}
@@ -66,4 +69,3 @@
 	<Dummy />
 	<MachineAgent />
 {/if}
-

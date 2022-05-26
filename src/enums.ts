@@ -12,14 +12,14 @@ export enum MachineTypes {
 	PRUSA_MINI = "PRUSA_MINI",
 	UM3E = "UM3E",
 	UMS3 = "UMS3",
-	DUMMY = "DUMMY"
+	DUMMY = "DUMMY",
 }
 
 export enum MachineConnectionTypes {
 	ULTIMAKER_API = "ULTIMAKER_API",
 	USB = "USB",
 	OCTOPRINT = "OCTOPRINT",
-	DUMMY = "DUMMY"
+	DUMMY = "DUMMY",
 }
 
 export enum JobStates {
