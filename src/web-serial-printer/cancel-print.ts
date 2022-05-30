@@ -9,7 +9,7 @@ export const cancelPrint = async function(this: WebSerialPrinter) {
 		"G91 ; use relative positioning",
 		"M104 S0 ; Turn off extruder heater",
 		"M140 S0 ; Turn off bed heater",
-		"G1 X0 Y0 Z10 F1000 ; park print head",
+		"G1 X0 Y0 Z20 F1000 ; park print head",
 		"M107 ; Turn off fan",
 		"M84 ; disable motors",
 	]
