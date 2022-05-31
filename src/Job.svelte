@@ -31,6 +31,7 @@
 	let isConnectDisabled = true
 	let isDisconnectDisabled = true
 	let files: any
+	let fileInput: any
 	let socket: Socket
 	let notifications: string[] = [`${new Date().toISOString()}: Welcome to BAM`]
 
@@ -181,8 +182,12 @@
 				if (g.includes("PRINTER_MODEL_MINI")) {
 					gcodes[MachineTypes.PRUSA_MINI] = g
 				}
+				if (g.includes("Ultimaker S3")) {
+					gcodes[MachineTypes.UMS3] = g
+				}
 				// For testing. place the gcode for the dummy printer to pick up
 				gcodes[MachineTypes.DUMMY] = g
+				fileInput.value = ""
 			}
 			reader.readAsText(files[0])
 		}
@@ -257,8 +262,8 @@
 </FormGroup>
 
 <FormGroup>
-	<Label>G-Code</Label>
-	<input class="form-control" type="file" bind:files />
+	<Label>Add G-Code</Label>
+	<input class="form-control" type="file" bind:files bind:this={fileInput} />
 </FormGroup>
 
 <FormGroup>

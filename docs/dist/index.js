@@ -10084,18 +10084,18 @@ var MessageSubjects;
 // docs/dist/Job.svelte.js
 function get_each_context2(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[24] = list[i][0];
-  child_ctx[25] = list[i][1];
+  child_ctx[26] = list[i][0];
+  child_ctx[27] = list[i][1];
   return child_ctx;
 }
 function get_each_context_1(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[28] = list[i];
-  child_ctx[30] = i;
+  child_ctx[30] = list[i];
+  child_ctx[32] = i;
   return child_ctx;
 }
 function create_default_slot_18(ctx) {
-  let t0_value = ctx[28] + "";
+  let t0_value = ctx[30] + "";
   let t0;
   let t1;
   let a;
@@ -10103,7 +10103,7 @@ function create_default_slot_18(ctx) {
   let mounted;
   let dispose;
   function click_handler() {
-    return ctx[13](ctx[30]);
+    return ctx[14](ctx[32]);
   }
   return {
     c() {
@@ -10124,7 +10124,7 @@ function create_default_slot_18(ctx) {
     },
     p(new_ctx, dirty) {
       ctx = new_ctx;
-      if (dirty[0] & 512 && t0_value !== (t0_value = ctx[28] + ""))
+      if (dirty[0] & 1024 && t0_value !== (t0_value = ctx[30] + ""))
         set_data(t0, t0_value);
     },
     d(detaching) {
@@ -10158,7 +10158,7 @@ function create_each_block_1(ctx) {
     },
     p(ctx2, dirty) {
       const listgroupitem_changes = {};
-      if (dirty[0] & 512 | dirty[1] & 1) {
+      if (dirty[0] & 1024 | dirty[1] & 4) {
         listgroupitem_changes.$$scope = {dirty, ctx: ctx2};
       }
       listgroupitem.$set(listgroupitem_changes);
@@ -10181,7 +10181,7 @@ function create_each_block_1(ctx) {
 function create_default_slot_17(ctx) {
   let each_1_anchor;
   let current;
-  let each_value_1 = ctx[9];
+  let each_value_1 = ctx[10];
   let each_blocks = [];
   for (let i = 0; i < each_value_1.length; i += 1) {
     each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
@@ -10204,8 +10204,8 @@ function create_default_slot_17(ctx) {
       current = true;
     },
     p(ctx2, dirty) {
-      if (dirty[0] & 4608) {
-        each_value_1 = ctx2[9];
+      if (dirty[0] & 9216) {
+        each_value_1 = ctx2[10];
         let i;
         for (i = 0; i < each_value_1.length; i += 1) {
           const child_ctx = get_each_context_1(ctx2, each_value_1, i);
@@ -10276,7 +10276,7 @@ function create_default_slot_15(ctx) {
     }
   });
   function input_value_binding(value2) {
-    ctx[14](value2);
+    ctx[15](value2);
   }
   let input_props = {
     type: "text",
@@ -10302,7 +10302,7 @@ function create_default_slot_15(ctx) {
     },
     p(ctx2, dirty) {
       const inputgrouptext_changes = {};
-      if (dirty[1] & 1) {
+      if (dirty[1] & 4) {
         inputgrouptext_changes.$$scope = {dirty, ctx: ctx2};
       }
       inputgrouptext.$set(inputgrouptext_changes);
@@ -10355,7 +10355,7 @@ function create_default_slot_14(ctx) {
     },
     p(ctx2, dirty) {
       const inputgroup_changes = {};
-      if (dirty[0] & 1 | dirty[1] & 1) {
+      if (dirty[0] & 1 | dirty[1] & 4) {
         inputgroup_changes.$$scope = {dirty, ctx: ctx2};
       }
       inputgroup.$set(inputgroup_changes);
@@ -10403,7 +10403,7 @@ function create_default_slot_12(ctx) {
     }
   });
   function input_value_binding_1(value2) {
-    ctx[15](value2);
+    ctx[16](value2);
   }
   let input_props = {
     type: "text",
@@ -10429,7 +10429,7 @@ function create_default_slot_12(ctx) {
     },
     p(ctx2, dirty) {
       const inputgrouptext_changes = {};
-      if (dirty[1] & 1) {
+      if (dirty[1] & 4) {
         inputgrouptext_changes.$$scope = {dirty, ctx: ctx2};
       }
       inputgrouptext.$set(inputgrouptext_changes);
@@ -10482,7 +10482,7 @@ function create_default_slot_11(ctx) {
     },
     p(ctx2, dirty) {
       const inputgroup_changes = {};
-      if (dirty[0] & 2 | dirty[1] & 1) {
+      if (dirty[0] & 2 | dirty[1] & 4) {
         inputgroup_changes.$$scope = {dirty, ctx: ctx2};
       }
       inputgroup.$set(inputgroup_changes);
@@ -10530,7 +10530,7 @@ function create_default_slot_9(ctx) {
     }
   });
   function input_value_binding_2(value2) {
-    ctx[16](value2);
+    ctx[17](value2);
   }
   let input_props = {
     type: "text",
@@ -10556,7 +10556,7 @@ function create_default_slot_9(ctx) {
     },
     p(ctx2, dirty) {
       const inputgrouptext_changes = {};
-      if (dirty[1] & 1) {
+      if (dirty[1] & 4) {
         inputgrouptext_changes.$$scope = {dirty, ctx: ctx2};
       }
       inputgrouptext.$set(inputgrouptext_changes);
@@ -10609,7 +10609,7 @@ function create_default_slot_8(ctx) {
     },
     p(ctx2, dirty) {
       const inputgroup_changes = {};
-      if (dirty[0] & 4 | dirty[1] & 1) {
+      if (dirty[0] & 4 | dirty[1] & 4) {
         inputgroup_changes.$$scope = {dirty, ctx: ctx2};
       }
       inputgroup.$set(inputgroup_changes);
@@ -10633,7 +10633,7 @@ function create_default_slot_7(ctx) {
   let t;
   return {
     c() {
-      t = text("G-Code");
+      t = text("Add G-Code");
     },
     m(target, anchor) {
       insert(target, t, anchor);
@@ -10669,15 +10669,16 @@ function create_default_slot_6(ctx) {
       mount_component(label, target, anchor);
       insert(target, t, anchor);
       insert(target, input, anchor);
+      ctx[19](input);
       current = true;
       if (!mounted) {
-        dispose = listen(input, "change", ctx[17]);
+        dispose = listen(input, "change", ctx[18]);
         mounted = true;
       }
     },
     p(ctx2, dirty) {
       const label_changes = {};
-      if (dirty[1] & 1) {
+      if (dirty[1] & 4) {
         label_changes.$$scope = {dirty, ctx: ctx2};
       }
       label.$set(label_changes);
@@ -10698,6 +10699,7 @@ function create_default_slot_6(ctx) {
         detach(t);
       if (detaching)
         detach(input);
+      ctx[19](null);
       mounted = false;
       dispose();
     }
@@ -10741,7 +10743,7 @@ function create_default_slot_3(ctx) {
   let updating_disabled_1;
   let current;
   function button0_disabled_binding(value2) {
-    ctx[18](value2);
+    ctx[20](value2);
   }
   let button0_props = {
     color: "primary",
@@ -10753,9 +10755,9 @@ function create_default_slot_3(ctx) {
   }
   button0 = new Button({props: button0_props});
   binding_callbacks.push(() => bind(button0, "disabled", button0_disabled_binding));
-  button0.$on("click", ctx[10]);
+  button0.$on("click", ctx[11]);
   function button1_disabled_binding(value2) {
-    ctx[19](value2);
+    ctx[21](value2);
   }
   let button1_props = {
     color: "danger",
@@ -10767,7 +10769,7 @@ function create_default_slot_3(ctx) {
   }
   button1 = new Button({props: button1_props});
   binding_callbacks.push(() => bind(button1, "disabled", button1_disabled_binding));
-  button1.$on("click", ctx[11]);
+  button1.$on("click", ctx[12]);
   return {
     c() {
       create_component(button0.$$.fragment);
@@ -10782,7 +10784,7 @@ function create_default_slot_3(ctx) {
     },
     p(ctx2, dirty) {
       const button0_changes = {};
-      if (dirty[1] & 1) {
+      if (dirty[1] & 4) {
         button0_changes.$$scope = {dirty, ctx: ctx2};
       }
       if (!updating_disabled && dirty[0] & 128) {
@@ -10792,7 +10794,7 @@ function create_default_slot_3(ctx) {
       }
       button0.$set(button0_changes);
       const button1_changes = {};
-      if (dirty[1] & 1) {
+      if (dirty[1] & 4) {
         button1_changes.$$scope = {dirty, ctx: ctx2};
       }
       if (!updating_disabled_1 && dirty[0] & 256) {
@@ -10881,7 +10883,7 @@ function create_else_block2(ctx) {
     },
     p(ctx2, dirty) {
       const listgroupitem_changes = {};
-      if (dirty[0] & 64 | dirty[1] & 1) {
+      if (dirty[0] & 64 | dirty[1] & 4) {
         listgroupitem_changes.$$scope = {dirty, ctx: ctx2};
       }
       listgroupitem.$set(listgroupitem_changes);
@@ -10920,7 +10922,7 @@ function create_if_block2(ctx) {
     },
     p(ctx2, dirty) {
       const listgroupitem_changes = {};
-      if (dirty[0] & 64 | dirty[1] & 1) {
+      if (dirty[0] & 64 | dirty[1] & 4) {
         listgroupitem_changes.$$scope = {dirty, ctx: ctx2};
       }
       listgroupitem.$set(listgroupitem_changes);
@@ -10941,7 +10943,7 @@ function create_if_block2(ctx) {
   };
 }
 function create_default_slot_2(ctx) {
-  let t0_value = ctx[24] + "";
+  let t0_value = ctx[26] + "";
   let t0;
   let t1;
   return {
@@ -10954,7 +10956,7 @@ function create_default_slot_2(ctx) {
       insert(target, t1, anchor);
     },
     p(ctx2, dirty) {
-      if (dirty[0] & 64 && t0_value !== (t0_value = ctx2[24] + ""))
+      if (dirty[0] & 64 && t0_value !== (t0_value = ctx2[26] + ""))
         set_data(t0, t0_value);
     },
     d(detaching) {
@@ -10966,7 +10968,7 @@ function create_default_slot_2(ctx) {
   };
 }
 function create_default_slot_19(ctx) {
-  let t0_value = ctx[24] + "";
+  let t0_value = ctx[26] + "";
   let t0;
   let t1;
   return {
@@ -10979,7 +10981,7 @@ function create_default_slot_19(ctx) {
       insert(target, t1, anchor);
     },
     p(ctx2, dirty) {
-      if (dirty[0] & 64 && t0_value !== (t0_value = ctx2[24] + ""))
+      if (dirty[0] & 64 && t0_value !== (t0_value = ctx2[26] + ""))
         set_data(t0, t0_value);
     },
     d(detaching) {
@@ -10998,7 +11000,7 @@ function create_each_block2(ctx) {
   const if_block_creators = [create_if_block2, create_else_block2];
   const if_blocks = [];
   function select_block_type(ctx2, dirty) {
-    if (ctx2[25])
+    if (ctx2[27])
       return 0;
     return 1;
   }
@@ -11304,32 +11306,32 @@ function create_fragment2(ctx) {
     },
     p(ctx2, dirty) {
       const listgroup0_changes = {};
-      if (dirty[0] & 512 | dirty[1] & 1) {
+      if (dirty[0] & 1024 | dirty[1] & 4) {
         listgroup0_changes.$$scope = {dirty, ctx: ctx2};
       }
       listgroup0.$set(listgroup0_changes);
       const formgroup0_changes = {};
-      if (dirty[0] & 1 | dirty[1] & 1) {
+      if (dirty[0] & 1 | dirty[1] & 4) {
         formgroup0_changes.$$scope = {dirty, ctx: ctx2};
       }
       formgroup0.$set(formgroup0_changes);
       const formgroup1_changes = {};
-      if (dirty[0] & 2 | dirty[1] & 1) {
+      if (dirty[0] & 2 | dirty[1] & 4) {
         formgroup1_changes.$$scope = {dirty, ctx: ctx2};
       }
       formgroup1.$set(formgroup1_changes);
       const formgroup2_changes = {};
-      if (dirty[0] & 4 | dirty[1] & 1) {
+      if (dirty[0] & 4 | dirty[1] & 4) {
         formgroup2_changes.$$scope = {dirty, ctx: ctx2};
       }
       formgroup2.$set(formgroup2_changes);
       const formgroup3_changes = {};
-      if (dirty[0] & 16 | dirty[1] & 1) {
+      if (dirty[0] & 528 | dirty[1] & 4) {
         formgroup3_changes.$$scope = {dirty, ctx: ctx2};
       }
       formgroup3.$set(formgroup3_changes);
       const formgroup4_changes = {};
-      if (dirty[0] & 384 | dirty[1] & 1) {
+      if (dirty[0] & 384 | dirty[1] & 4) {
         formgroup4_changes.$$scope = {dirty, ctx: ctx2};
       }
       formgroup4.$set(formgroup4_changes);
@@ -11360,7 +11362,7 @@ function create_fragment2(ctx) {
         if_block1 = null;
       }
       const listgroup1_changes = {};
-      if (dirty[0] & 64 | dirty[1] & 1) {
+      if (dirty[0] & 64 | dirty[1] & 4) {
         listgroup1_changes.$$scope = {dirty, ctx: ctx2};
       }
       listgroup1.$set(listgroup1_changes);
@@ -11454,6 +11456,7 @@ function instance2($$self, $$props, $$invalidate) {
   let isConnectDisabled = true;
   let isDisconnectDisabled = true;
   let files2;
+  let fileInput;
   let socket;
   let notifications = [`${new Date().toISOString()}: Welcome to BAM`];
   const connect2 = () => {
@@ -11472,7 +11475,7 @@ function instance2($$self, $$props, $$invalidate) {
       return;
     }
     notifications.push(`${new Date().toISOString()}: Connecting to BAM`);
-    $$invalidate(9, notifications);
+    $$invalidate(10, notifications);
     const url2 = "https://www.workshop-jobs.com";
     const ioConfig = {
       auth: {token},
@@ -11527,7 +11530,7 @@ function instance2($$self, $$props, $$invalidate) {
         socket.emit(MessageProtocols.DIRECT, response);
         $$invalidate(3, status = JobStates.SELECTED);
         notifications.push(`${new Date().toISOString()}: Job has been accepted`);
-        $$invalidate(9, notifications);
+        $$invalidate(10, notifications);
       } else {
         console.log("|- Job responding with decline");
         const response = {
@@ -11554,7 +11557,7 @@ function instance2($$self, $$props, $$invalidate) {
   };
   const removeNotification = (idx) => {
     notifications.splice(idx, 1);
-    $$invalidate(9, notifications);
+    $$invalidate(10, notifications);
   };
   const click_handler = (i) => removeNotification(i);
   function input_value_binding(value2) {
@@ -11572,6 +11575,12 @@ function instance2($$self, $$props, $$invalidate) {
   function input_change_handler() {
     files2 = this.files;
     $$invalidate(4, files2);
+  }
+  function input_binding($$value) {
+    binding_callbacks[$$value ? "unshift" : "push"](() => {
+      fileInput = $$value;
+      $$invalidate(9, fileInput), $$invalidate(4, files2);
+    });
   }
   function button0_disabled_binding(value2) {
     isConnectDisabled = value2;
@@ -11594,7 +11603,11 @@ function instance2($$self, $$props, $$invalidate) {
             if (g.includes("PRINTER_MODEL_MINI")) {
               $$invalidate(6, gcodes[MachineTypes.PRUSA_MINI] = g, gcodes);
             }
+            if (g.includes("Ultimaker S3")) {
+              $$invalidate(6, gcodes[MachineTypes.UMS3] = g, gcodes);
+            }
             $$invalidate(6, gcodes[MachineTypes.DUMMY] = g, gcodes);
+            $$invalidate(9, fileInput.value = "", fileInput);
           };
           reader.readAsText(files2[0]);
         }
@@ -11629,6 +11642,7 @@ function instance2($$self, $$props, $$invalidate) {
     gcodes,
     isConnectDisabled,
     isDisconnectDisabled,
+    fileInput,
     notifications,
     connect2,
     disconnect2,
@@ -11638,6 +11652,7 @@ function instance2($$self, $$props, $$invalidate) {
     input_value_binding_1,
     input_value_binding_2,
     input_change_handler,
+    input_binding,
     button0_disabled_binding,
     button1_disabled_binding
   ];
