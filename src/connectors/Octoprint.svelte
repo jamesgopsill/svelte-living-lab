@@ -7,31 +7,16 @@
 		Col,
 		InputGroup,
 		InputGroupText,
+		Icon
 	} from "sveltestrap"
-	import { OctoPrintClient, JobCommands } from "octoprint-client"
+	import { OctoPrintClient, JobCommands } from "@jamesgopsill/octoprint-client"
+	import type { PrinterStatus, JobInformation } from "@jamesgopsill/octoprint-client"
 	import machine from "../stores/machine-store"
-
-	const defaultStats = () => {
-		return {
-			state: {
-				text: "Not Connected",
-			},
-			temperature: {
-				bed: {
-					actual: 0.0,
-					target: 0.0,
-				},
-				tool0: {
-					actual: 0.0,
-					target: 0.0,
-				},
-			},
-		}
-	}
 
 	let url = "" // URL of Octopi
 	let token = "" // API token
-	let stats: any = defaultStats()
+	let stats: PrinterStatus | null = null
+	let jobInformation: JobInformation | null = null 
 	let statsInterval: any
 	let client: OctoPrintClient = null
 	let connect = false
@@ -41,7 +26,14 @@
 		console.log("|- Connecting to Octoprint")
 		client = new OctoPrintClient(url, token)
 		statsInterval = setInterval(async () => {
-			stats = await client.getStatus()
+			const statsResponse = await client.status()
+			if (statsResponse.ok) {
+				stats = statsResponse.data
+			}
+			const jobResponse = await client.jobInformation()
+			if (jobResponse.ok) {
+				jobInformation = jobResponse.data
+			}
 		}, 1000)
 	}
 
@@ -49,14 +41,14 @@
 		console.log("|- Disconnecting from Octoprint")
 		client = null
 		clearInterval(statsInterval)
-		stats = defaultStats()
+		stats = null
 	}
 
 	$: if ($machine.gcode) {
 		$machine.available = false
-		client.uploadFileToLocal($machine.gcode).then(() => {
+		client.uploadFileToLocal("bam.gcode", $machine.gcode).then(() => {
 			console.log("gcode uploaded")
-			client.selectFileAndPrint("octoprint-client.gcode").then(() => {
+			client.print("bam.gcode").then(() => {
 				console.log("print command issued")
 				$machine.gcode = ""
 			})
@@ -70,9 +62,9 @@
 				//@ts-ignore
 				let g: string = event.target.result
 				// Should put checks here.
-				client.uploadFileToLocal(g).then(() => {
+				client.uploadFileToLocal("bam.gcode", g).then(() => {
 					console.log("gcode uploaded")
-					client.selectFileAndPrint("octoprint-client.gcode").then(() => {
+					client.print("bam.gcode").then(() => {
 						console.log("print command issued")
 					})
 				})
@@ -83,7 +75,7 @@
 
 	const cancel = () => {
 		if (client) {
-			client.issueJobCommand(JobCommands.CANCEL)
+			client.jobCommand(JobCommands.CANCEL)
 		}
 	}
 </script>
@@ -94,16 +86,36 @@
 
 <dl class="row">
 	<dt class="col-3">Machine Status:</dt>
-	<dd class="col-3">{stats.state.text}</dd>
+	<dd class="col-3">
+		{#if stats}
+			{stats.state.text}
+		{/if}
+	</dd>
 	<dt class="col-3">Machine Available:</dt>
 	<dd class="col-3">{$machine.available}</dd>
 	<dt class="col-3">Bed Temperature:</dt>
 	<dd class="col-3">
-		{stats.temperature.bed.actual} ({stats.temperature.bed.target})
+		{#if stats}
+			{stats.temperature.bed.actual} ({stats.temperature.bed.target})
+		{/if}
 	</dd>
 	<dt class="col-3">Extruder Temperature:</dt>
 	<dd class="col-3">
-		{stats.temperature.tool0.actual} ({stats.temperature.tool0.target})
+		{#if stats}
+			{stats.temperature.tool0.actual} ({stats.temperature.tool0.target})
+		{/if}
+	</dd>
+	<dt class="col-3">Current Job:</dt>
+	<dd class="col-3">
+		{#if jobInformation}
+			{jobInformation.job.file.name}
+		{/if}
+	</dd>
+	<dt class="col-3">Progress:</dt>
+	<dd class="col-3">
+		{#if jobInformation}
+			{jobInformation.progress.completion}
+		{/if}
 	</dd>
 </dl>
 
@@ -149,6 +161,50 @@
 <hr />
 
 <h5>Controls</h5>
+<FormGroup>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (client) client.homeAll()
+		}}><Icon name="house-fill" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (client) client.printerCommands(["G91", "G1 X-5", "G90"])
+		}}><Icon name="arrow-left" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (client) client.printerCommands(["G91", "G1 Y5", "G90"])
+		}}><Icon name="arrow-up" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (client) client.printerCommands(["G91", "G1 Y-5", "G90"])
+		}}><Icon name="arrow-down" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (client) client.printerCommands(["G91", "G1 X5", "G90"])
+		}}><Icon name="arrow-right" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (client) client.printerCommands(["G91", "G1 Z5", "G90"])
+		}}><Icon name="arrow-bar-up" /></Button
+	>
+	<Button
+		color="primary"
+		on:click={() => {
+			if (client) client.printerCommands(["G91", "G1 Z-5", "G90"])
+		}}><Icon name="arrow-bar-down" /></Button
+	>
+</FormGroup>
 
 <Row>
 	<Col>

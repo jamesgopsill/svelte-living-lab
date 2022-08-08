@@ -1,5 +1,6 @@
 import type { WebSerialPrinter } from "."
 
+
 export const connect = async function(this: WebSerialPrinter) {
 	if (!("serial" in navigator)) {
 		alert("This browser does not support Web Serial.")
