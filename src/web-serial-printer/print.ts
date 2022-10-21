@@ -1,9 +1,9 @@
 import type { WebSerialPrinter } from "."
 
-export const print = async function(this: WebSerialPrinter, gcode: string) {
+export const print = async function (this: WebSerialPrinter, gcode: string) {
 	// pause requesting for updates
 	console.log("Starting Test Print")
-	this.status.update(v => "printing")
+	this.status.update((v) => "printing")
 
 	let gcodeLines = gcode.split("\n")
 	for (const line of gcodeLines) {
@@ -27,7 +27,7 @@ export const print = async function(this: WebSerialPrinter, gcode: string) {
 	if (this.cancel) {
 		this.cancelPrint()
 	} else {
-		this.status.update(v => "connected")
+		this.status.update((v) => "connected")
 		console.log("Serial Print Complete")
 	}
 }

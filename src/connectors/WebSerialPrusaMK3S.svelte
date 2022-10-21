@@ -1,13 +1,31 @@
 <script lang="ts">
-	import { FormGroup, Input, Label, Button, InputGroup, InputGroupText, Icon } from "sveltestrap"
+	import {
+		FormGroup,
+		Input,
+		Label,
+		Button,
+		InputGroup,
+		InputGroupText,
+		Icon,
+	} from "sveltestrap"
 	import machine from "../stores/machine-store"
 	import { WebSerialPrinter } from "../web-serial-printer"
 
 	let files: any
 	let printer = new WebSerialPrinter("PRUSA_MK3S")
 	printer.baud = 115200
-	let { firmware, sourceCodeUrl, status, protocolVersion, uuid, machineType, extruderTempActual, extruderTempDemand, bedTempActual, bedTempDemand } = printer
-
+	let {
+		firmware,
+		sourceCodeUrl,
+		status,
+		protocolVersion,
+		uuid,
+		machineType,
+		extruderTempActual,
+		extruderTempDemand,
+		bedTempActual,
+		bedTempDemand,
+	} = printer
 
 	const toggle = () => {
 		if (printer.isConnected) {
@@ -20,7 +38,7 @@
 	const submit = () => {
 		if (files) {
 			const reader = new FileReader()
-			reader.onload = function(event) {
+			reader.onload = function (event) {
 				//@ts-ignore
 				let g: string = event.target.result
 				printer.print(g)
@@ -57,22 +75,30 @@
 	<dd class="col-sm-3">{$machineType}</dd>
 </dl>
 
-
 <FormGroup>
 	<InputGroup>
 		<InputGroupText>Baud Rate</InputGroupText>
 		<Input
-			type="text" 
+			type="text"
 			bind:value={printer.baud}
-			invalid={!printer.baud} 
+			invalid={!printer.baud}
 			feedback="Baud Rate Required"
 		/>
 	</InputGroup>
 </FormGroup>
 
 <FormGroup>
-	<Input bind:checked={printer.isConnected} on:change={toggle} type="switch" label="Toggle switch to connect/disconnect printer" />
-	<Input bind:checked={$machine.available} type="switch" label="Toggle to make available" />
+	<Input
+		bind:checked={printer.isConnected}
+		on:change={toggle}
+		type="switch"
+		label="Toggle switch to connect/disconnect printer"
+	/>
+	<Input
+		bind:checked={$machine.available}
+		type="switch"
+		label="Toggle to make available"
+	/>
 </FormGroup>
 
 <h5>Controls</h5>
@@ -131,4 +157,3 @@
 	<Button color="primary" on:click={submit}>Submit</Button>
 	<Button color="danger" on:click={cancel}>Cancel</Button>
 </FormGroup>
-

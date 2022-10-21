@@ -7,16 +7,19 @@
 		Col,
 		InputGroup,
 		InputGroupText,
-		Icon
+		Icon,
 	} from "sveltestrap"
 	import { OctoPrintClient, JobCommands } from "@jamesgopsill/octoprint-client"
-	import type { PrinterStatus, JobInformation } from "@jamesgopsill/octoprint-client"
+	import type {
+		PrinterStatus,
+		JobInformation,
+	} from "@jamesgopsill/octoprint-client"
 	import machine from "../stores/machine-store"
 
 	let url = "" // URL of Octopi
 	let token = "" // API token
 	let stats: PrinterStatus | null = null
-	let jobInformation: JobInformation | null = null 
+	let jobInformation: JobInformation | null = null
 	let statsInterval: any
 	let client: OctoPrintClient = null
 	let connect = false
@@ -80,7 +83,7 @@
 	}
 </script>
 
-<h5>Summary</h5>
+<h5>Octoprint Connector</h5>
 
 <hr />
 
@@ -119,31 +122,34 @@
 	</dd>
 </dl>
 
-<h5>Connect</h5>
-
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>URL</InputGroupText>
-		<Input
-			type="text"
-			bind:value={url}
-			invalid={!url}
-			feedback="URL Required"
-		/>
-	</InputGroup>
-</FormGroup>
-
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>API Key</InputGroupText>
-		<Input
-			type="text"
-			bind:value={token}
-			invalid={!token}
-			feedback="API Key Required"
-		/>
-	</InputGroup>
-</FormGroup>
+<Row>
+	<Col>
+		<FormGroup>
+			<InputGroup>
+				<InputGroupText>URL</InputGroupText>
+				<Input
+					type="text"
+					bind:value={url}
+					invalid={!url}
+					feedback="URL Required"
+				/>
+			</InputGroup>
+		</FormGroup>
+	</Col>
+	<Col>
+		<FormGroup>
+			<InputGroup>
+				<InputGroupText>API Key</InputGroupText>
+				<Input
+					type="text"
+					bind:value={token}
+					invalid={!token}
+					feedback="API Key Required"
+				/>
+			</InputGroup>
+		</FormGroup>
+	</Col>
+</Row>
 
 <FormGroup>
 	<Input
@@ -160,7 +166,6 @@
 
 <hr />
 
-<h5>Controls</h5>
 <FormGroup>
 	<Button
 		color="primary"

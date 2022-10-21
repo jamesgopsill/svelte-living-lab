@@ -1,7 +1,6 @@
 import type { WebSerialPrinter } from "."
 
-export const read = async function(this: WebSerialPrinter) {
-
+export const read = async function (this: WebSerialPrinter) {
 	while (true) {
 		console.log("Reading the Serial Port")
 		const { value, done } = await this.reader.read()
@@ -24,7 +23,11 @@ export const read = async function(this: WebSerialPrinter) {
 			}
 			// handle recent log entry event (note that -1 could be a partially digested command)
 			// there could also be multiple lines in one message
-			for (let i = this.log.length - (linesAdded + 1); i < this.log.length - 1; i++) {
+			for (
+				let i = this.log.length - (linesAdded + 1);
+				i < this.log.length - 1;
+				i++
+			) {
 				this.evalString(this.log[i])
 			}
 		} else {

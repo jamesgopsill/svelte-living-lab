@@ -8,7 +8,6 @@ import { writable } from "svelte/store"
 import { sendGcode } from "./send-gcode"
 
 export class WebSerialPrinter {
-
 	// https://stackoverflow.com/questions/62884259/making-class-instance-reactive-in-svelte-using-stores
 	status = writable("disconnected")
 	firmware = writable("")
@@ -16,11 +15,10 @@ export class WebSerialPrinter {
 	uuid = writable("")
 	protocolVersion = writable("")
 	machineType = writable("")
-	extruderTempActual = writable(0.)
-	extruderTempDemand = writable(0.)
-	bedTempActual = writable(0.)
-	bedTempDemand = writable(0.)
-
+	extruderTempActual = writable(0)
+	extruderTempDemand = writable(0)
+	bedTempActual = writable(0)
+	bedTempDemand = writable(0)
 
 	isConnected = false
 	baud: number
@@ -46,5 +44,4 @@ export class WebSerialPrinter {
 	print = print
 	cancelPrint = cancelPrint
 	sendGcode = sendGcode
-
 }

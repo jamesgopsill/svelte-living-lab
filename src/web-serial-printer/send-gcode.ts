@@ -1,6 +1,9 @@
 import type { WebSerialPrinter } from "."
 
-export const sendGcode = async function(this: WebSerialPrinter, gcode: string[]) {
+export const sendGcode = async function (
+	this: WebSerialPrinter,
+	gcode: string[]
+) {
 	for (const line of gcode) {
 		if (!line.startsWith(";") && line) {
 			// Ignore the comments

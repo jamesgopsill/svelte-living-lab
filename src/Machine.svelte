@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { FormGroup, Input, InputGroup, InputGroupText } from "sveltestrap"
+	import {
+		FormGroup,
+		Input,
+		InputGroup,
+		InputGroupText,
+		Row,
+		Col,
+	} from "sveltestrap"
 	import { MachineConnectionTypes, MachineTypes } from "./enums"
 	import Dummy from "./connectors/Dummy.svelte"
 	import machine from "./stores/machine-store"
@@ -45,19 +52,30 @@
 
 <br />
 
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>Select the machine/connection type</InputGroupText>
-		<Input type="select" name="select" on:change={changeMachine}>
-			<option value="1">Ultimaker 3 Extended (Ultimaker API)</option>
-			<option value="2">Ultimaker S3 (Ultimaker API)</option>
-			<option value="3">Prusa Mini (WebUSB)</option>
-			<option value="4">Prusa (Octoprint)</option>
-			<option value="5">Prusa MK3S (WebUSB) [NOT COMPLETE]</option>
-			<option value="6">Dummy Printer</option>
-		</Input>
-	</InputGroup>
-</FormGroup>
+<Row>
+	<Col xs={8}>
+		<FormGroup>
+			<InputGroup>
+				<InputGroupText>Select the machine/connection type</InputGroupText>
+				<Input type="select" name="select" on:change={changeMachine}>
+					<option value="1">Ultimaker 3 Extended (Ultimaker API)</option>
+					<option value="2">Ultimaker S3 (Ultimaker API)</option>
+					<option value="3">Prusa Mini (WebUSB)</option>
+					<option value="4">Prusa (Octoprint)</option>
+					<option value="5">Prusa MK3S (WebUSB) [NOT COMPLETE]</option>
+					<option value="6">Dummy Printer</option>
+				</Input>
+			</InputGroup>
+		</FormGroup>
+	</Col>
+	<Col xs={4}>
+		<img
+			alt=""
+			width="100%"
+			src="https://dmf-lab.co.uk/wp-content/uploads/2021/05/Logo_with_uob_lowres.png"
+		/>
+	</Col>
+</Row>
 
 {#if $machine.connectionType == MachineConnectionTypes.ULTIMAKER_API}
 	<Ultimaker />

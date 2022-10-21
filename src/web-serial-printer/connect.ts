@@ -1,17 +1,16 @@
 import type { WebSerialPrinter } from "."
 
-
-export const connect = async function(this: WebSerialPrinter) {
+export const connect = async function (this: WebSerialPrinter) {
 	if (!("serial" in navigator)) {
 		alert("This browser does not support Web Serial.")
 		return
 	}
 
 	// Request the serial port
-	//@ts-ignore 
+	//@ts-ignore
 	this.port = await navigator.serial
-	.requestPort()
-	.catch((err: any) => console.log(err))
+		.requestPort()
+		.catch((err: any) => console.log(err))
 
 	await this.port.open({ baudRate: this.baud })
 
@@ -40,6 +39,6 @@ export const connect = async function(this: WebSerialPrinter) {
 		}, 2000)
 	}
 
-	this.status.update(v => "connected")
+	this.status.update((v) => "connected")
 	this.isConnected = true
 }

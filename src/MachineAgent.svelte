@@ -1,41 +1,34 @@
 <script lang="ts">
-	import {
-		FormGroup,
-		Input,
-		Button,
-		InputGroup,
-		InputGroupText,
-	} from "sveltestrap"
+	import { Badge, FormGroup, Button } from "sveltestrap"
 	import { io } from "socket.io-client"
 	import type { Socket } from "socket.io-client"
 	import { MessageProtocols, MessageSubjects } from "./enums"
 	import type { Message } from "./interfaces"
 	import machine from "./stores/machine-store"
+	import { bamAccessKey, bamGroup, bamBrokerURL } from "./stores/settings-store"
 
-	let token = ""
-	let group = ""
 	let socket: Socket
 	let isConnected = false
 	let interval: any
 	let jobs = []
 
 	const connect = () => {
-		if (!token || !group) {
+		if (!$bamAccessKey || !$bamGroup) {
 			return
 		}
 
-		const url = "https://www.workshop-jobs.com"
+		//const url = "https://www.workshop-jobs.com"
 		const ioConfig = {
 			auth: {
-				token: token,
+				token: $bamAccessKey,
 			},
 			extraHeaders: {
 				"agent-type": "machine",
-				"group-key": group,
+				"group-key": $bamGroup,
 			},
 			path: "/socket/",
 		}
-		socket = io(url, ioConfig)
+		socket = io($bamBrokerURL, ioConfig)
 			.on(MessageProtocols.CONNECT, handleConnect)
 			.on(MessageProtocols.DIRECT, handleDirect)
 			.on(MessageProtocols.MESSAGE_ERROR, (msg: string) => console.log(msg))
@@ -111,6 +104,11 @@
 
 <h5>Broker Machine</h5>
 
+<Badge pill={true}>{$bamBrokerURL}</Badge>
+<!-- <Badge pill={true}>{$bamAccessKey}</Badge> -->
+<Badge pill={true}>{$bamGroup}</Badge>
+<br /><br />
+
 <dl class="row">
 	<dt class="col-3">Socket Status:</dt>
 	<dd class="col-3">
@@ -125,30 +123,6 @@
 		{/if}
 	</dd>
 </dl>
-
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>Access Key</InputGroupText>
-		<Input
-			type="text"
-			bind:value={token}
-			invalid={!token}
-			feedback="Access Key Required"
-		/>
-	</InputGroup>
-</FormGroup>
-
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>Group</InputGroupText>
-		<Input
-			type="text"
-			bind:value={group}
-			invalid={!group}
-			feedback="Group Required"
-		/>
-	</InputGroup>
-</FormGroup>
 
 <FormGroup>
 	<Button color="primary" disabled={isConnected} on:click={connect}>

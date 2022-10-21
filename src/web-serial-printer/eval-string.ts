@@ -1,6 +1,9 @@
-import type { WebSerialPrinter } from "." 
+import type { WebSerialPrinter } from "."
 
-export const evalString = async function(this: WebSerialPrinter, line: string) {
+export const evalString = async function (
+	this: WebSerialPrinter,
+	line: string
+) {
 	line = line.trim()
 	line = line.replace("\r", "")
 	console.log("Response:", line)
@@ -15,32 +18,38 @@ export const evalString = async function(this: WebSerialPrinter, line: string) {
 		if (line.startsWith("FIRMWARE_NAME")) {
 			const firmware = line.match(/(?<=FIRMWARE_NAME:).*(?=SOURCE_CODE_URL)/g)
 			console.log(firmware)
-			this.firmware.update(_ => firmware[0].trim())
-			
-			const sourceCodeUrl = line.match(/(?<=SOURCE_CODE_URL:).*(?=PROTO)/g)
-			this.sourceCodeUrl.update(_ => sourceCodeUrl[0].trim())
+			this.firmware.update((_) => firmware[0].trim())
 
-			const protocolVersion = line.match(/(?<=PROTOCOL_VERSION:).*(?=MACHINE_TYPE)/g)
-			this.protocolVersion.update(_ => protocolVersion[0].trim())
+			const sourceCodeUrl = line.match(/(?<=SOURCE_CODE_URL:).*(?=PROTO)/g)
+			this.sourceCodeUrl.update((_) => sourceCodeUrl[0].trim())
+
+			const protocolVersion = line.match(
+				/(?<=PROTOCOL_VERSION:).*(?=MACHINE_TYPE)/g
+			)
+			this.protocolVersion.update((_) => protocolVersion[0].trim())
 
 			const machineType = line.match(/(?<=MACHINE_TYPE:).*(?=EXTRUDER_COUNT)/g)
-			this.machineType.update(_ => machineType[0].trim())
+			this.machineType.update((_) => machineType[0].trim())
 
 			const uuid = line.match(/(?<=UUID:).*/g)
-			this.uuid.update(_ => uuid[0].trim())
+			this.uuid.update((_) => uuid[0].trim())
 			return
 		}
 
 		// Temp report
-		if (line.startsWith("ok T") || line.startsWith("T") ) {
+		if (line.startsWith("ok T") || line.startsWith("T")) {
 			const extruderTempActual = line.match(/(?<=T:).*(?=\/)/g)
-			this.extruderTempActual.update(_ => parseFloat(extruderTempActual[0].trim()))
+			this.extruderTempActual.update((_) =>
+				parseFloat(extruderTempActual[0].trim())
+			)
 			const extruderTempDemand = line.match(/(?<=\/).*(?=B)/g)
-			this.extruderTempDemand.update(_ => parseFloat(extruderTempDemand[0].trim()))
+			this.extruderTempDemand.update((_) =>
+				parseFloat(extruderTempDemand[0].trim())
+			)
 			const bedTempActual = line.match(/(?<=B:).*(?=\/)/g)
-			this.bedTempActual.update(_ => parseFloat(bedTempActual[0].trim()))
+			this.bedTempActual.update((_) => parseFloat(bedTempActual[0].trim()))
 			const bedTempDemand = line.match(/[0-9.\s]+(?=A:)/g)
-			this.bedTempDemand.update(_ => parseFloat(bedTempDemand[0].trim()))
+			this.bedTempDemand.update((_) => parseFloat(bedTempDemand[0].trim()))
 			return
 		}
 	}
@@ -50,19 +59,21 @@ export const evalString = async function(this: WebSerialPrinter, line: string) {
 		if (line.startsWith("FIRMWARE_NAME")) {
 			const firmware = line.match(/(?<=FIRMWARE_NAME:).*(?=FIRMWARE_URL)/g)
 			console.log(firmware)
-			this.firmware.update(_ => firmware[0].trim())
-			
-			const sourceCodeUrl = line.match(/(?<=FIRMWARE_URL:).*(?=PROTO)/g)
-			this.sourceCodeUrl.update(_ => sourceCodeUrl[0].trim())
+			this.firmware.update((_) => firmware[0].trim())
 
-			const protocolVersion = line.match(/(?<=PROTOCOL_VERSION:).*(?=MACHINE_TYPE)/g)
-			this.protocolVersion.update(_ => protocolVersion[0].trim())
+			const sourceCodeUrl = line.match(/(?<=FIRMWARE_URL:).*(?=PROTO)/g)
+			this.sourceCodeUrl.update((_) => sourceCodeUrl[0].trim())
+
+			const protocolVersion = line.match(
+				/(?<=PROTOCOL_VERSION:).*(?=MACHINE_TYPE)/g
+			)
+			this.protocolVersion.update((_) => protocolVersion[0].trim())
 
 			const machineType = line.match(/(?<=MACHINE_TYPE:).*(?=EXTRUDER_COUNT)/g)
-			this.machineType.update(_ => machineType[0].trim())
+			this.machineType.update((_) => machineType[0].trim())
 
 			const uuid = line.match(/(?<=UUID:).*/g)
-			this.uuid.update(_ => uuid[0].trim())
+			this.uuid.update((_) => uuid[0].trim())
 			return
 		}
 	}

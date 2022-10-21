@@ -4,10 +4,10 @@
 		FormGroup,
 		Input,
 		Label,
-		InputGroup,
-		InputGroupText,
 		ListGroup,
 		ListGroupItem,
+		Row,
+		Col,
 	} from "sveltestrap"
 	import { io } from "socket.io-client"
 	import type { Socket } from "socket.io-client"
@@ -18,9 +18,8 @@
 		MessageSubjects,
 	} from "./enums"
 	import type { Message } from "./interfaces"
+	import { bamAccessKey, bamGroup, bamBrokerURL } from "./stores/settings-store"
 
-	let token = ""
-	let group = ""
 	let name = ""
 	// Set entries for all the different gcode
 	let gcodes = {}
@@ -38,7 +37,7 @@
 	const connect = (): void => {
 		console.log("Connecting to BAM")
 		// TODO - all form checks
-		if (!token || !group || !name) {
+		if (!$bamAccessKey || !$bamGroup || !name) {
 			console.log("Information Missing")
 			return
 		}
@@ -51,22 +50,21 @@
 			return
 		}
 
-		notifications.push(`${new Date().toISOString()}: Connecting to BAM`)
-		notifications = notifications
+		notify(`${new Date().toISOString()}: Connecting to BAM`)
 
 		// Creating the connection
-		const url = "https://www.workshop-jobs.com"
+		//const url = $bamBrokerURL // "https://www.workshop-jobs.com"
 		const ioConfig = {
 			auth: {
-				token: token,
+				token: $bamAccessKey,
 			},
 			extraHeaders: {
 				"agent-type": "job",
-				"group-key": group,
+				"group-key": $bamGroup,
 			},
 			path: "/socket/",
 		}
-		socket = io(url, ioConfig)
+		socket = io($bamBrokerURL, ioConfig)
 			.on(MessageProtocols.CONNECT, handleConnect)
 			.on(MessageProtocols.ALL_JOBS, handleAllJobs)
 			.on(MessageProtocols.DIRECT, handleDirect)
@@ -97,8 +95,9 @@
 	}
 
 	const handleAllJobs = function (this: Socket, msg: Message): void {
-		console.log("|- JobAgent: received ALL_JOBS message")
-		console.log(`|- JobAgent: status - ${status}`)
+		notify(
+			`${new Date().toISOString()}: received ALL_JOBS message. I am ${status}`
+		)
 		// Respond to the machine
 		if (
 			msg.subject == MessageSubjects.MACHINE_IS_LOOKING_FOR_JOBS &&
@@ -119,12 +118,12 @@
 		this: Socket,
 		msg: Message
 	): Promise<void> {
-		console.log("|- Job received DIRECT message")
+		notify(`${new Date().toISOString()}: Job received DIRECT message`)
 		if (
 			msg.subject == MessageSubjects.MACHINE_HAS_CHOSEN_A_JOB &&
 			status == JobStates.AVAILABLE
 		) {
-			console.log("|- Job responding with accept")
+			notify(`${new Date().toISOString()}: Job responding with accept`)
 
 			if (gcodes[msg.body.machineType]) {
 				const response: Message = {
@@ -137,10 +136,9 @@
 				}
 				socket.emit(MessageProtocols.DIRECT, response)
 				status = JobStates.SELECTED
-				notifications.push(`${new Date().toISOString()}: Job has been accepted`)
-				notifications = notifications
+				notify(`${new Date().toISOString()}: Job has been accepted`)
 			} else {
-				console.log("|- Job responding with decline")
+				notify(`${new Date().toISOString()}: Job responding with decline`)
 				const response: Message = {
 					toId: msg.fromId,
 					fromId: socket.id,
@@ -152,7 +150,7 @@
 			return
 		}
 		if (msg.subject == MessageSubjects.MACHINE_HAS_CHOSEN_A_JOB) {
-			console.log("|- Job responding with decline")
+			notify(`${new Date().toISOString()}: Job responding with decline`)
 			const response: Message = {
 				toId: msg.fromId,
 				fromId: socket.id,
@@ -164,10 +162,19 @@
 		}
 	}
 
+	const notify = (msg: string) => {
+		console.log(msg)
+		notifications.push(msg)
+		if (notifications.length > 6) notifications.shift()
+		notifications = notifications
+	}
+
+	/*
 	const removeNotification = (idx: number) => {
 		notifications.splice(idx, 1)
 		notifications = notifications
 	}
+	*/
 
 	$: {
 		if (files) {
@@ -194,7 +201,13 @@
 	}
 
 	$: {
-		if (name && group && token && status == JobStates.NOT_ONLINE) {
+		if (
+			name &&
+			$bamAccessKey &&
+			$bamGroup &&
+			$bamBrokerURL &&
+			status == JobStates.NOT_ONLINE
+		) {
 			isConnectDisabled = false
 		} else {
 			isConnectDisabled = true
@@ -210,103 +223,105 @@
 	}
 </script>
 
-<h5>Messages</h5>
-<ListGroup>
-	{#each notifications as noti, i}
-		<ListGroupItem
-			>{noti} |
-			<a href={"#"} on:click={() => removeNotification(i)}>delete</a
-			></ListGroupItem
-		>
-	{/each}
-</ListGroup>
+<Row>
+	<Col xs="8" class="mt-4">
+		<Row>
+			<Col xs="6">
+				<FormGroup>
+					<Label>Job Name</Label>
+					<Input
+						type="text"
+						bind:value={name}
+						invalid={!name}
+						feedback="Job Name Required"
+					/>
+				</FormGroup>
+			</Col>
+			<Col xs="6">
+				<FormGroup>
+					<Label>Add G-Code</Label>
+					<input
+						class="form-control"
+						type="file"
+						bind:files
+						bind:this={fileInput}
+					/>
+				</FormGroup>
+			</Col>
+		</Row>
 
-<hr />
+		<h5>Details</h5>
 
-<h5>Submit Job to BAM</h5>
+		<dl class="row">
+			<dt class="col-3">Connecting to:</dt>
+			<dd class="col-9">{$bamBrokerURL}</dd>
+			<!--
+		<dt class="col-3">Access key:</dt>
+		<dd class="col-9">{$bamAccessKey}</dd>
+	-->
+			<dt class="col-3">Group:</dt>
+			<dd class="col-9">{$bamGroup}</dd>
+			<dt class="col-3">Job Status:</dt>
+			<dd class="col-9">{status}</dd>
+			<dt class="col-3">Connection Status:</dt>
+			<dd class="col-3">
+				{#if socket}
+					{socket.connected}
+				{/if}
+			</dd>
+			<dt class="col-3">Connection Id:</dt>
+			<dd class="col-3">
+				{#if socket}
+					{socket.id}
+				{/if}
+			</dd>
+		</dl>
 
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>Access Key</InputGroupText>
-		<Input
-			type="text"
-			bind:value={token}
-			invalid={!token}
-			feedback="Access Key Required"
+		<p><strong>Job G-Code</strong></p>
+		<ListGroup>
+			{#each Object.entries(gcodes) as [m, g]}
+				{#if g}
+					<ListGroupItem color="primary">{m}: True</ListGroupItem>
+				{:else}
+					<ListGroupItem color="warning">{m}: False</ListGroupItem>
+				{/if}
+			{/each}
+		</ListGroup>
+
+		<br />
+
+		<FormGroup>
+			<Button
+				color="primary"
+				bind:disabled={isConnectDisabled}
+				on:click={connect}
+			>
+				Connect
+			</Button>
+			<Button
+				color="danger"
+				bind:disabled={isDisconnectDisabled}
+				on:click={disconnect}
+			>
+				Disconnect
+			</Button>
+		</FormGroup>
+	</Col>
+
+	<Col xs="4" class="mt-4">
+		<img
+			alt=""
+			width="100%"
+			src="https://dmf-lab.co.uk/wp-content/uploads/2021/05/Logo_with_uob_lowres.png"
 		/>
-	</InputGroup>
-</FormGroup>
 
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>Group</InputGroupText>
-		<Input
-			type="text"
-			bind:value={group}
-			invalid={!group}
-			feedback="Group Required"
-		/>
-	</InputGroup>
-</FormGroup>
+		<br /><br />
 
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>Job Name</InputGroupText>
-		<Input
-			type="text"
-			bind:value={name}
-			invalid={!name}
-			feedback="Job Name Required"
-		/>
-	</InputGroup>
-</FormGroup>
-
-<FormGroup>
-	<Label>Add G-Code</Label>
-	<input class="form-control" type="file" bind:files bind:this={fileInput} />
-</FormGroup>
-
-<FormGroup>
-	<Button color="primary" bind:disabled={isConnectDisabled} on:click={connect}>
-		Connect
-	</Button>
-	<Button
-		color="danger"
-		bind:disabled={isDisconnectDisabled}
-		on:click={disconnect}
-	>
-		Disconnect
-	</Button>
-</FormGroup>
-
-<hr />
-
-<h5>Details</h5>
-
-<dl class="row">
-	<dt class="col-2">Job Status:</dt>
-	<dd class="col-10">{status}</dd>
-	<dt class="col-2">Socket Status:</dt>
-	<dd class="col-10">
-		{#if socket}
-			{socket.connected}
-		{/if}
-	</dd>
-	<dt class="col-3">Socket Id:</dt>
-	<dd class="col-3">
-		{#if socket}
-			{socket.id}
-		{/if}
-	</dd>
-</dl>
-
-<p><strong>Machine G-Codes</strong></p>
-<ListGroup>
-	{#each Object.entries(gcodes) as [m, g]}
-		{#if g}
-			<ListGroupItem>{m}: True</ListGroupItem>
-		{:else}
-			<ListGroupItem>{m}: False</ListGroupItem>
-		{/if}
-	{/each}
-</ListGroup>
+		<h5>Messages</h5>
+		<ListGroup>
+			{#each notifications as noti}
+				<ListGroupItem><small>{noti}</small></ListGroupItem>
+			{/each}
+		</ListGroup>
+	</Col>
+</Row>

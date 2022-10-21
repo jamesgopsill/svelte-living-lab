@@ -1,7 +1,7 @@
 import type { WebSerialPrinter } from "."
 
-export const cancelPrint = async function(this: WebSerialPrinter) {
-	this.status.update(v => "canceling")
+export const cancelPrint = async function (this: WebSerialPrinter) {
+	this.status.update((v) => "canceling")
 	console.log("CANCELLING THE PRINT")
 	// Spam the printer until it listens and interrupts whatever the machine is doing
 	const resetLines = [
@@ -25,7 +25,7 @@ export const cancelPrint = async function(this: WebSerialPrinter) {
 			await this.wait(10)
 		}
 	}
-	this.status.update(_ => "connected")
+	this.status.update((_) => "connected")
 	this.cancel = false
 	return
 }
