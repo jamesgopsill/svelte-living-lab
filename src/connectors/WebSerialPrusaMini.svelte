@@ -1,13 +1,5 @@
 <script lang="ts">
-	import {
-		FormGroup,
-		Input,
-		Label,
-		Button,
-		InputGroup,
-		InputGroupText,
-		Icon,
-	} from "sveltestrap"
+	import { FormGroup, Input, Label, Button, Icon } from "sveltestrap"
 	import machine from "../stores/machine-store"
 	import { WebSerialPrinter } from "../web-serial-printer"
 
@@ -79,16 +71,13 @@
 	<dd class="col-sm-3">{$bedTempActual} | {$bedTempDemand}</dd>
 </dl>
 
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>Baud Rate</InputGroupText>
-		<Input
-			type="text"
-			bind:value={printer.baud}
-			invalid={!printer.baud}
-			feedback="Baud Rate Required"
-		/>
-	</InputGroup>
+<FormGroup floating label="Baud Rate">
+	<Input
+		type="text"
+		bind:value={printer.baud}
+		invalid={!printer.baud}
+		feedback="Baud Rate Required"
+	/>
 </FormGroup>
 
 <FormGroup>

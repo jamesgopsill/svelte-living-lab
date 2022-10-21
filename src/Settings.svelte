@@ -1,42 +1,39 @@
 <script lang="ts">
-	import { FormGroup, InputGroup, InputGroupText, Input } from "sveltestrap"
+	import { FormGroup, Input } from "sveltestrap"
 	import { bamAccessKey, bamGroup, bamBrokerURL } from "./stores/settings-store"
 </script>
 
-<h5>BAM Configuration Settings</h5>
+<h5 class="mt-3 mb-3">BAM Configuration Settings</h5>
 
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>BAM Broker URL</InputGroupText>
-		<Input
-			type="text"
-			bind:value={$bamBrokerURL}
-			invalid={!$bamBrokerURL}
-			feedback="Access Key Required"
-		/>
-	</InputGroup>
+<FormGroup floating label="API Endpoint">
+	<Input
+		type="text"
+		bind:value={$bamBrokerURL}
+		invalid={!$bamBrokerURL}
+		feedback="Access Key Required"
+	/>
 </FormGroup>
 
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>BAM Access Key</InputGroupText>
-		<Input
-			type="text"
-			bind:value={$bamAccessKey}
-			invalid={!$bamAccessKey}
-			feedback="Access Key Required"
-		/>
-	</InputGroup>
+<FormGroup floating label="BAM Access Key">
+	<Input
+		type="text"
+		bind:value={$bamAccessKey}
+		invalid={!$bamAccessKey}
+		feedback="Access Key Required"
+	/>
 </FormGroup>
 
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>BAM Group</InputGroupText>
-		<Input
-			type="text"
-			bind:value={$bamGroup}
-			invalid={!$bamGroup}
-			feedback="Group Required"
-		/>
-	</InputGroup>
+<FormGroup floating label="BAM Group">
+	<Input
+		type="text"
+		bind:value={$bamGroup}
+		invalid={!$bamGroup}
+		feedback="Group Required"
+	/>
 </FormGroup>
+
+<img
+	alt=""
+	width="50%"
+	src="https://dmf-lab.co.uk/wp-content/uploads/2021/05/Logo_with_uob_lowres.png"
+/>

@@ -3,7 +3,6 @@
 		Button,
 		FormGroup,
 		Input,
-		Label,
 		ListGroup,
 		ListGroupItem,
 		Row,
@@ -227,8 +226,7 @@
 	<Col xs="8" class="mt-4">
 		<Row>
 			<Col xs="6">
-				<FormGroup>
-					<Label>Job Name</Label>
+				<FormGroup floating label="Job Name">
 					<Input
 						type="text"
 						bind:value={name}
@@ -238,8 +236,7 @@
 				</FormGroup>
 			</Col>
 			<Col xs="6">
-				<FormGroup>
-					<Label>Add G-Code</Label>
+				<FormGroup label="Add G-Code">
 					<input
 						class="form-control"
 						type="file"

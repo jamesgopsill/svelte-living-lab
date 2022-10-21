@@ -1,14 +1,5 @@
 <script lang="ts">
-	import {
-		FormGroup,
-		Input,
-		Button,
-		Row,
-		Col,
-		InputGroup,
-		InputGroupText,
-		Icon,
-	} from "sveltestrap"
+	import { FormGroup, Input, Button, Row, Col, Icon } from "sveltestrap"
 	import { OctoPrintClient, JobCommands } from "@jamesgopsill/octoprint-client"
 	import type {
 		PrinterStatus,
@@ -124,29 +115,23 @@
 
 <Row>
 	<Col>
-		<FormGroup>
-			<InputGroup>
-				<InputGroupText>URL</InputGroupText>
-				<Input
-					type="text"
-					bind:value={url}
-					invalid={!url}
-					feedback="URL Required"
-				/>
-			</InputGroup>
+		<FormGroup floating label="Octoprint URL">
+			<Input
+				type="text"
+				bind:value={url}
+				invalid={!url}
+				feedback="URL Required"
+			/>
 		</FormGroup>
 	</Col>
 	<Col>
-		<FormGroup>
-			<InputGroup>
-				<InputGroupText>API Key</InputGroupText>
-				<Input
-					type="text"
-					bind:value={token}
-					invalid={!token}
-					feedback="API Key Required"
-				/>
-			</InputGroup>
+		<FormGroup floating label="API Key">
+			<Input
+				type="text"
+				bind:value={token}
+				invalid={!token}
+				feedback="API Key Required"
+			/>
 		</FormGroup>
 	</Col>
 </Row>

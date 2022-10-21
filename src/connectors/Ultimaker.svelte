@@ -1,13 +1,5 @@
 <script lang="ts">
-	import {
-		FormGroup,
-		Input,
-		Row,
-		Col,
-		InputGroup,
-		InputGroupText,
-		Button,
-	} from "sveltestrap"
+	import { FormGroup, Input, Row, Col, Button } from "sveltestrap"
 	import {
 		UltimakerClient,
 		UltimakerJobTargetState,
@@ -92,16 +84,13 @@
 	<dd class="col-3">{bedTemp.current} ({bedTemp.target})</dd>
 </dl>
 
-<FormGroup>
-	<InputGroup>
-		<InputGroupText>IP Address</InputGroupText>
-		<Input
-			type="text"
-			bind:value={ip}
-			invalid={!ip}
-			feedback="IP Address Required"
-		/>
-	</InputGroup>
+<FormGroup floating label="IP Address">
+	<Input
+		type="text"
+		bind:value={ip}
+		invalid={!ip}
+		feedback="IP Address Required"
+	/>
 </FormGroup>
 
 <FormGroup>
