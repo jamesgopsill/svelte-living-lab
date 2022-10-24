@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		Nav,
 		Navbar,
 		NavbarBrand,
 		Container,

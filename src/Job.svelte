@@ -7,6 +7,8 @@
 		ListGroupItem,
 		Row,
 		Col,
+		Badge,
+		Table
 	} from "sveltestrap"
 	import { io } from "socket.io-client"
 	import type { Socket } from "socket.io-client"
@@ -231,8 +233,8 @@
 						type="text"
 						bind:value={name}
 						invalid={!name}
-						feedback="Job Name Required"
 					/>
+					<!-- feedback="Job Name Required" -->
 				</FormGroup>
 			</Col>
 			<Col xs="6">
@@ -247,45 +249,63 @@
 			</Col>
 		</Row>
 
-		<h5>Details</h5>
+		<h5>Summary</h5>
 
-		<dl class="row">
-			<dt class="col-3">Connecting to:</dt>
-			<dd class="col-9">{$bamBrokerURL}</dd>
-			<!--
-		<dt class="col-3">Access key:</dt>
-		<dd class="col-9">{$bamAccessKey}</dd>
-	-->
-			<dt class="col-3">Group:</dt>
-			<dd class="col-9">{$bamGroup}</dd>
-			<dt class="col-3">Job Status:</dt>
-			<dd class="col-9">{status}</dd>
-			<dt class="col-3">Connection Status:</dt>
-			<dd class="col-3">
-				{#if socket}
-					{socket.connected}
-				{/if}
-			</dd>
-			<dt class="col-3">Connection Id:</dt>
-			<dd class="col-3">
-				{#if socket}
-					{socket.id}
-				{/if}
-			</dd>
-		</dl>
-
-		<p><strong>Job G-Code</strong></p>
-		<ListGroup>
-			{#each Object.entries(gcodes) as [m, g]}
-				{#if g}
-					<ListGroupItem color="primary">{m}: True</ListGroupItem>
-				{:else}
-					<ListGroupItem color="warning">{m}: False</ListGroupItem>
-				{/if}
-			{/each}
-		</ListGroup>
-
-		<br />
+		<Table striped={true} hover={true} size="sm">
+			<thead>
+				<tr>
+					<th>Item</th>
+					<th>Details</th>	
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Job Name</td>
+					<td>{name}</td>
+				</tr>
+				<tr>
+					<td>Connecting to</td>
+					<td>{$bamBrokerURL}</td>
+				</tr>
+				<tr>
+					<td>Group</td>
+					<td>{$bamGroup}</td>
+				</tr>
+				<tr>
+					<td>Job Status</td>
+					<td>{status}</td>
+				</tr>
+				<tr>
+					<td>Connection Status</td>
+					<td>
+						{#if socket}
+							{socket.connected}
+						{/if}
+					</td>
+				</tr>
+				<tr>
+					<td>Connection Id</td>
+					<td>
+						{#if socket}
+							{socket.id}
+						{/if}
+					</td>
+				</tr>
+				<tr>
+					<td>Gcode</td>
+					<td>
+						{#each Object.entries(gcodes) as [m, g]}
+							{#if g}
+								<Badge color="primary">{m}</Badge>
+							{:else}
+								<Badge color="warning">{m}</Badge>
+							{/if}
+							&nbsp;
+						{/each}
+					</td>
+				</tr>
+			</tbody>
+		</Table>
 
 		<FormGroup>
 			<Button
@@ -306,13 +326,22 @@
 	</Col>
 
 	<Col xs="4" class="mt-4">
-		<img
-			alt=""
-			width="100%"
-			src="https://dmf-lab.co.uk/wp-content/uploads/2021/05/Logo_with_uob_lowres.png"
-		/>
+		<div class="text-center mb-2">
+			<p>👨‍💻 with 🧡 and ☕ by</p>
+			<img
+				alt=""
+				width="90%"
+				src="https://dmf-lab.co.uk/wp-content/uploads/2021/05/Logo_with_uob_lowres.png"
+			/>
+			<img
+				alt=""
+				width="70%"
+				class="mt-2"
+				src="https://upload.wikimedia.org/wikipedia/commons/9/9c/UKRI_EPSR_Council-Logo_Horiz-RGB.png" 
+			/>
+		</div>
 
-		<br /><br />
+		<hr />
 
 		<h5>Messages</h5>
 		<ListGroup>
