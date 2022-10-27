@@ -226,8 +226,11 @@
 
 <Row>
 	<Col xs="8" class="mt-4">
+
+		<h6 class="text-center">Job Form</h6>
+
 		<Row>
-			<Col xs="6">
+			<Col xs="12">
 				<FormGroup floating label="Job Name">
 					<Input
 						type="text"
@@ -237,7 +240,7 @@
 					<!-- feedback="Job Name Required" -->
 				</FormGroup>
 			</Col>
-			<Col xs="6">
+			<Col xs="12">
 				<FormGroup label="Add G-Code">
 					<input
 						class="form-control"
@@ -249,7 +252,7 @@
 			</Col>
 		</Row>
 
-		<h5>Summary</h5>
+		<h6 class="text-center">Summary</h6>
 
 		<Table striped={true} hover={true} size="sm">
 			<thead>
@@ -313,7 +316,7 @@
 				bind:disabled={isConnectDisabled}
 				on:click={connect}
 			>
-				Connect
+				Connect and Submit
 			</Button>
 			<Button
 				color="danger"
@@ -326,24 +329,7 @@
 	</Col>
 
 	<Col xs="4" class="mt-4">
-		<div class="text-center mb-2">
-			<p>👨‍💻 with 🧡 and ☕ by</p>
-			<img
-				alt=""
-				width="90%"
-				src="https://dmf-lab.co.uk/wp-content/uploads/2021/05/Logo_with_uob_lowres.png"
-			/>
-			<img
-				alt=""
-				width="70%"
-				class="mt-2"
-				src="https://upload.wikimedia.org/wikipedia/commons/9/9c/UKRI_EPSR_Council-Logo_Horiz-RGB.png" 
-			/>
-		</div>
-
-		<hr />
-
-		<h5>Messages</h5>
+		<h6 class="text-center">Messages</h6>
 		<ListGroup>
 			{#each notifications as noti}
 				<ListGroupItem><small>{noti}</small></ListGroupItem>

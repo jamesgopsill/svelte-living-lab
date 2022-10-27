@@ -32,19 +32,3 @@
 	/>
 </FormGroup>
 
-<footer>
-	<hr />
-	<p>👨‍💻 with 🧡 and ☕ by</p>
-	<img
-		alt=""
-		height="75"
-		src="https://dmf-lab.co.uk/wp-content/uploads/2021/05/Logo_with_uob_lowres.png"
-	/>
-	<br />
-	<img
-		alt=""
-		height="75"
-		class="mt-2"
-		src="https://upload.wikimedia.org/wikipedia/commons/9/9c/UKRI_EPSR_Council-Logo_Horiz-RGB.png" 
-	/>
-</footer>

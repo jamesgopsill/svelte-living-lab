@@ -53,7 +53,7 @@
 <br />
 
 <Row>
-	<Col xs={6}>
+	<Col>
 		<FormGroup>
 			<InputGroup>
 				<InputGroupText>Select the machine/connection type</InputGroupText>
@@ -67,19 +67,6 @@
 				</Input>
 			</InputGroup>
 		</FormGroup>
-	</Col>
-	<Col xs={6} class="text-center">
-		<img
-			alt=""
-			height="50"
-			src="https://dmf-lab.co.uk/wp-content/uploads/2021/05/Logo_with_uob_lowres.png"
-		/>
-		&nbsp;
-		<img
-			alt=""
-			height="50"
-			src="https://upload.wikimedia.org/wikipedia/commons/9/9c/UKRI_EPSR_Council-Logo_Horiz-RGB.png" 
-		/>
 	</Col>
 </Row>
 
