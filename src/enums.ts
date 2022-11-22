@@ -21,6 +21,7 @@ export enum MachineConnectionTypes {
 	USB = "USB",
 	OCTOPRINT = "OCTOPRINT",
 	DUMMY = "DUMMY",
+	MANUAL = "MANUAL"
 }
 
 export enum JobStates {

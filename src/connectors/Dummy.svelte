@@ -6,7 +6,7 @@
 
 	$: {
 		if ($machine.gcode) {
-			// If machine code is availate
+			// If machine code is available
 			$machine.available = false
 			status = "printing"
 			// 'Print' for 5 seconds

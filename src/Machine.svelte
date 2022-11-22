@@ -15,6 +15,7 @@
 	import Ultimaker from "./connectors/Ultimaker.svelte"
 	import WebSerialPrusaMini from "./connectors/WebSerialPrusaMini.svelte"
 	import WebSerialPrusaMK3S from "./connectors/WebSerialPrusaMK3S.svelte"
+	import ManualPrinter from "./connectors/ManualPrinter.svelte"
 
 	const changeMachine = (event: any) => {
 		console.log(event.target.value)
@@ -41,6 +42,10 @@
 				$machine.connectionType = MachineConnectionTypes.USB
 				break
 			case "6":
+				$machine.machineType = MachineTypes.PRUSA_MINI
+				$machine.connectionType = MachineConnectionTypes.MANUAL
+				break
+			case "7":
 				$machine.machineType = MachineTypes.DUMMY
 				$machine.connectionType = MachineConnectionTypes.DUMMY
 				break
@@ -63,7 +68,8 @@
 					<option value="3">Prusa Mini (WebUSB)</option>
 					<option value="4">Prusa (Octoprint)</option>
 					<option value="5">Prusa MK3S (WebUSB) [NOT COMPLETE]</option>
-					<option value="6">Dummy Printer</option>
+					<option value="6">Manual Printer</option>
+					<option value="7">Dummy Printer</option>
 				</Input>
 			</InputGroup>
 		</FormGroup>
@@ -86,7 +92,12 @@
 	<Octoprint />
 	<hr />
 	<MachineAgent />
+{:else if $machine.connectionType == MachineConnectionTypes.MANUAL}
+	<ManualPrinter />
+	<hr />
+	<MachineAgent />
 {:else if $machine.connectionType == MachineConnectionTypes.DUMMY}
 	<Dummy />
+	<hr />
 	<MachineAgent />
 {/if}
