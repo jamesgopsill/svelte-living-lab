@@ -3,9 +3,10 @@
 	import { io } from "socket.io-client"
 	import type { Socket } from "socket.io-client"
 	import { MessageProtocols, MessageSubjects } from "./enums"
-	import type { Message } from "./interfaces"
+	import type { Message, ProgressUpdate } from "./interfaces"
 	import machine from "./stores/machine-store"
 	import { bamAccessKey, bamGroup, bamBrokerURL } from "./stores/settings-store"
+	import { v4 as uuidv4 } from "uuid"
 
 	let socket: Socket
 	let isConnected = false
@@ -74,7 +75,27 @@
 		if (msg.subject == MessageSubjects.JOB_HAS_ACCEPTED_MACHINES_OFFER) {
 			console.log("|- MachineAgent: Passing on the GCode")
 			jobs = []
-			$machine.gcode = msg.body.gcode
+			$machine.currentJob.transactionId = uuidv4()
+			$machine.currentJob.gcode = msg.body.gcode
+			$machine.currentJob.status = "Queued"
+			const response: Message = {
+				fromId: this.id,
+				toId: msg.fromId,
+				subject: MessageSubjects.TRANSACTION_ID,
+				body: {
+					id: $machine.currentJob.transactionId
+				},
+			}
+			socket.emit(MessageProtocols.DIRECT, response)
+			const postUpdate: ProgressUpdate = {
+				transactionId: $machine.currentJob.transactionId,
+				status: "Queued"
+			}
+			socket.emit(MessageProtocols.POST_PROGRESS, postUpdate)
+
+			// TODO:
+			// Add a means to update the progress update/
+			// Add a page for people to query jobs.
 		}
 		if (msg.subject == MessageSubjects.JOB_HAS_DECLINED_MACHINES_OFFER) {
 			jobs = []
@@ -98,6 +119,16 @@
 				},
 			}
 			socket.emit(MessageProtocols.DIRECT, msg)
+		}
+	}
+
+	$: {
+		if ($machine.currentJob.transactionId && socket && socket.connected) {
+			const postUpdate: ProgressUpdate = {
+				transactionId: $machine.currentJob.transactionId,
+				status: $machine.currentJob.status
+			}
+			socket.emit(MessageProtocols.POST_PROGRESS, postUpdate)
 		}
 	}
 </script>

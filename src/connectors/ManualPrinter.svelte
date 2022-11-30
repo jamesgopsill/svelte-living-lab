@@ -11,7 +11,7 @@
 
 	const download = () => {
 		console.log("download print file")
-		const file = new File([$machine.gcode], "print.gcode", {
+		const file = new File([$machine.currentJob.gcode], "print.gcode", {
 			type: "text/plain",
 		})
 
@@ -26,11 +26,11 @@
 		document.body.removeChild(link)
 		window.URL.revokeObjectURL(url)
 
-		$machine.gcode = ""
+		$machine.currentJob.gcode = ""
 	}
 
 	$: {
-		if ($machine.gcode) {
+		if ($machine.currentJob.gcode) {
 			// If machine code is available
 			$machine.available = false
 		}
@@ -60,7 +60,22 @@
 	/>
 </FormGroup>
 
-{#if $machine.gcode}
+<FormGroup>
+	<InputGroup>
+		<InputGroupText
+			>Job status for transaction {$machine.currentJob
+				.transactionId}.</InputGroupText
+		>
+		<Input type="select" name="select" bind:value={$machine.currentJob.status}>
+			<option value="Queued">Queued</option>
+			<option value="Printing">Printing</option>
+			<option value="Complete">Complete</option>
+			<option value="Failed">Failed</option>
+		</Input>
+	</InputGroup>
+</FormGroup>
+
+{#if $machine.currentJob.gcode}
 	<p>A job has been received.</p>
 	<Button on:click={download}>Download Gcode File</Button>
 {/if}

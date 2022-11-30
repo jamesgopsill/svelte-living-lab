@@ -132,9 +132,10 @@
 					fromId: socket.id,
 					subject: MessageSubjects.JOB_HAS_ACCEPTED_MACHINES_OFFER,
 					body: {
-						gcode: gcodes[msg.body.machineType],
-					},
+						gcode: gcodes[msg.body.machineType]
+					}
 				}
+				console.log(response)
 				socket.emit(MessageProtocols.DIRECT, response)
 				status = JobStates.SELECTED
 				notify(`${new Date().toISOString()}: Job has been accepted`)
@@ -159,6 +160,10 @@
 				body: {},
 			}
 			socket.emit(MessageProtocols.DIRECT, response)
+			return
+		}
+		if (msg.subject == MessageSubjects.TRANSACTION_ID) {
+			notify(`${new Date().toISOString()}: Transaction ID ${msg.body.id}`)
 			return
 		}
 	}

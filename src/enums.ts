@@ -6,6 +6,8 @@ export enum MessageProtocols {
 	CONNECT = "connect",
 	CONNECT_ERROR = "connect_error",
 	STATS = "stats",
+	POST_PROGRESS = "post_progress",
+	GET_PROGRESS = "get_progress",
 }
 
 export enum MachineTypes {
@@ -36,4 +38,5 @@ export enum MessageSubjects {
 	MACHINE_HAS_CHOSEN_A_JOB = "machine_has_chosen_a_job",
 	JOB_HAS_ACCEPTED_MACHINES_OFFER = "job_has_accepted_machines_offer",
 	JOB_HAS_DECLINED_MACHINES_OFFER = "job_has_declined_machines_offer",
+	TRANSACTION_ID = "transaction_id"
 }

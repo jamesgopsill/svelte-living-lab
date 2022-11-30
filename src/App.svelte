@@ -11,7 +11,9 @@
 	import Settings from "./Settings.svelte"
 	//@ts-ignore
 	import logoUrl from "./assets/logo.png"
+	//@ts-ignore
 	import epsrcUrl from "./assets/epsrc.png"
+	import Tracker from "./Tracker.svelte"
 </script>
 
 <Navbar color="light" light={true} expand="md" class="mb-1">
@@ -42,6 +44,9 @@
 		</TabPane>
 		<TabPane class="mt-1" tabId="settings" tab="Settings">
 			<Settings />
+		</TabPane>
+		<TabPane class="mt-1" tabId="tracking" tab="Tracking">
+			<Tracker />
 		</TabPane>
 	</TabContent>
 	<footer class="text-center"><hr/><p>👨‍💻 with 🧡 and ☕</p></footer>

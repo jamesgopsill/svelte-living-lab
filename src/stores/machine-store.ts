@@ -5,12 +5,20 @@ export interface Machine {
 	machineType: MachineTypes | null
 	connectionType: MachineConnectionTypes | null
 	available: boolean
-	gcode: string
+	currentJob: {
+		transactionId: string
+		gcode: string
+		status: string
+	}
 }
 
 export default writable<Machine>({
 	machineType: null,
 	connectionType: null,
 	available: false,
-	gcode: "",
+	currentJob: {
+		transactionId: "",
+		gcode: "",
+		status: "",
+	},
 })
