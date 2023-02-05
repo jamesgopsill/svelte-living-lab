@@ -1,9 +1,5 @@
 <script lang="ts">
-	import {
-		MachineJobStates,
-		MachineStates,
-		MachineTypes,
-	} from "../../definitions/enums"
+	import { MachineJobStates, MachineTypes } from "../../definitions/enums"
 	import {
 		FormGroup,
 		InputGroup,
@@ -11,16 +7,13 @@
 		Input,
 		Button,
 	} from "sveltestrap"
+	import { machineAgent } from "../../classes/machine-agent"
 
-	export let jobStatus: string
-	export let gcode: string
-	export let machineStatus: MachineStates
-	export let machineAvailable: boolean
-	export let machineType: MachineTypes
+	let { gcode, available, machineType, jobStatus } = machineAgent
 
 	const download = () => {
 		console.log("download print file")
-		const file = new File([gcode], "print.gcode", {
+		const file = new File([$gcode], "print.gcode", {
 			type: "text/plain",
 		})
 
@@ -35,17 +28,18 @@
 		document.body.removeChild(link)
 		window.URL.revokeObjectURL(url)
 
-		gcode = ""
-		machineStatus = MachineStates.PRINTING
+		gcode.set("")
+		// machineStatus = MachineStates.PRINTING
 	}
 
 	$: {
-		if (gcode) {
+		if ($gcode) {
 			// If machine code is available
-			machineAvailable = false
+			available.set(false)
 		}
 	}
 
+	/*
 	$: {
 		if (machineAvailable && machineStatus == MachineStates.OFFLINE) {
 			machineStatus = MachineStates.IDLE
@@ -54,12 +48,13 @@
 			machineStatus = MachineStates.OFFLINE
 		}
 	}
+	*/
 </script>
 
 <FormGroup>
 	<InputGroup size="sm">
 		<InputGroupText>Select your machine.</InputGroupText>
-		<Input type="select" name="select" bind:value={machineType}>
+		<Input type="select" name="select" bind:value={$machineType}>
 			<option value={MachineTypes.PRUSA_MINI}>Prusa Mini</option>
 			<option value={MachineTypes.PRUSA_MK3S}>Prusa MK3S</option>
 			<option value={MachineTypes.UM3E}>Ultimaker 3 Extended</option>
@@ -71,17 +66,17 @@
 
 <FormGroup>
 	<Input
-		bind:checked={machineAvailable}
+		bind:checked={$available}
 		type="switch"
 		label="Toggle to make available to network"
 	/>
 </FormGroup>
 
-{#if jobStatus == MachineJobStates.QUEUED || jobStatus == MachineJobStates.PRINTING}
+{#if $jobStatus == MachineJobStates.QUEUED || $jobStatus == MachineJobStates.PRINTING}
 	<FormGroup>
 		<InputGroup>
 			<InputGroupText>Update Job Status</InputGroupText>
-			<Input type="select" name="select" bind:value={jobStatus}>
+			<Input type="select" name="select" bind:value={$jobStatus}>
 				<option value={MachineJobStates.QUEUED} disabled={true}>Queued</option>
 				<option value={MachineJobStates.PRINTING}>Printing</option>
 				<option value={MachineJobStates.COMPLETE}>Complete</option>
@@ -90,7 +85,7 @@
 	</FormGroup>
 {/if}
 
-{#if gcode}
+{#if $gcode}
 	<p>A job has been received.</p>
 	<Button on:click={download}>Download Gcode File</Button>
 {/if}

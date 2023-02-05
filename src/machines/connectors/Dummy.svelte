@@ -1,29 +1,28 @@
 <script lang="ts">
-	import { MachineStates, MachineJobStates } from "../../definitions/enums"
+	import { MachineJobStates } from "../../definitions/enums"
 	import { Input } from "sveltestrap"
+	import { machineAgent } from "../../classes/machine-agent"
 
-	export let jobStatus: string
-	export let gcode: string
-	export let machineStatus: MachineStates
-	export let machineAvailable: boolean
+	let { gcode, available, jobStatus } = machineAgent
 
 	$: {
-		if (gcode) {
+		if ($gcode) {
 			console.log("Machine Details Updated")
 			// If machine code is available
-			machineAvailable = false
-			jobStatus = MachineJobStates.PRINTING
-			machineStatus = MachineStates.PRINTING
-			gcode = ""
+			available.set(false)
+			jobStatus.set(MachineJobStates.PRINTING)
+			//machineStatus = MachineStates.PRINTING
+			gcode.set("")
 			// 'Print' for 5 seconds
 			setTimeout(() => {
-				machineStatus = MachineStates.IDLE
-				jobStatus = MachineJobStates.COMPLETE
-				gcode = ""
+				// machineStatus.set(MachineStates.IDLE)
+				jobStatus.set(MachineJobStates.COMPLETE)
+				gcode.set("")
 			}, 5000)
 		}
 	}
 
+	/*
 	$: {
 		if (machineAvailable && machineStatus == MachineStates.OFFLINE) {
 			machineStatus = MachineStates.IDLE
@@ -32,10 +31,11 @@
 			machineStatus = MachineStates.OFFLINE
 		}
 	}
+	*/
 </script>
 
 <Input
-	bind:checked={machineAvailable}
+	bind:checked={$available}
 	type="switch"
 	label="Toggle to make the machine available."
 />

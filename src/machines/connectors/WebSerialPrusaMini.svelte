@@ -12,9 +12,8 @@
 		Col,
 	} from "sveltestrap"
 	import { WebSerialPrinter } from "../../classes/web-serial-printer"
-
-	export let gcode: string
-	export let machineAvailable: boolean
+	import { machineAgent } from "../../classes/machine-agent"
+	let { gcode, available } = machineAgent
 
 	let files: any
 	let printer = new WebSerialPrinter("PRUSA_MINI")
@@ -56,10 +55,11 @@
 		printer.cancel = true
 	}
 
-	$: if (gcode) {
-		machineAvailable = false
-		printer.print(gcode)
-		gcode = ""
+	$: if ($gcode) {
+		available.set(false)
+		const g = ("-" + $gcode).slice(1)
+		printer.print(g)
+		gcode.set("")
 	}
 </script>
 
@@ -109,7 +109,7 @@
 		label="Toggle switch to connect/disconnect printer"
 	/>
 	<Input
-		bind:checked={machineAvailable}
+		bind:checked={$available}
 		type="switch"
 		label="Toggle to make available"
 	/>

@@ -11,7 +11,6 @@
 	import {
 		MachineConnectionTypes,
 		MachineJobStates,
-		MachineStates,
 		MachineTypes,
 	} from "../definitions/enums"
 	import Dummy from "./connectors/Dummy.svelte"
@@ -19,52 +18,42 @@
 	import Octoprint from "./connectors/Octoprint.svelte"
 	import Ultimaker from "./connectors/Ultimaker.svelte"
 	import WebSerialPrusaMini from "./connectors/WebSerialPrusaMini.svelte"
+	import { machineAgent } from "../classes/machine-agent"
 
-	let gcode: string = ""
-	let jobStatus: MachineJobStates = MachineJobStates.NULL
-	let contractId: string = ""
-	let machineStatus: MachineStates = MachineStates.OFFLINE
-	let machineAvailable: boolean = false
+	let { machineType, available, jobStatus, contractId } = machineAgent
 
-	let machineType: MachineTypes = MachineTypes.DUMMY
 	let connectionType: MachineConnectionTypes = MachineConnectionTypes.DUMMY
-	let machineConnectionCombo: string = "4"
+	let machineConnectionCombo: string = "1"
 
 	const resetStates = () => {
-		gcode = ""
-		jobStatus = MachineJobStates.NULL
-		machineStatus = MachineStates.OFFLINE
+		machineAgent.gcode.set("")
+		machineAgent.jobStatus.set(MachineJobStates.NULL)
 	}
 
 	$: {
 		switch (machineConnectionCombo) {
 			case "1":
-				machineType = MachineTypes.PRUSA_MINI
+				machineType.set(MachineTypes.PRUSA_MINI)
 				connectionType = MachineConnectionTypes.OCTOPRINT
 				resetStates()
 				break
 			case "2":
-				machineType = MachineTypes.UM3E
+				machineType.set(MachineTypes.UM3E)
 				connectionType = MachineConnectionTypes.ULTIMAKER_API
 				resetStates()
 				break
 			case "3":
-				machineType = MachineTypes.UMS3
-				connectionType = MachineConnectionTypes.ULTIMAKER_API
-				resetStates()
-				break
-			case "4":
-				machineType = MachineTypes.PRUSA_MINI
+				machineType.set(MachineTypes.PRUSA_MINI)
 				connectionType = MachineConnectionTypes.USB
 				resetStates()
 				break
-			case "5":
-				machineType = MachineTypes.PRUSA_MINI
+			case "4":
+				machineType.set(MachineTypes.PRUSA_MINI)
 				connectionType = MachineConnectionTypes.MANUAL
 				resetStates()
 				break
-			case "6":
-				machineType = MachineTypes.DUMMY
+			case "5":
+				machineType.set(MachineTypes.DUMMY)
 				connectionType = MachineConnectionTypes.MANUAL
 				resetStates()
 				break
@@ -77,14 +66,13 @@
 <Row class="mt-4">
 	<Col xs={8}>
 		<InputGroup size="sm" class="mb-2">
-			<InputGroupText>Machine/Conn</InputGroupText>
+			<InputGroupText>Connection</InputGroupText>
 			<Input type="select" name="select" bind:value={machineConnectionCombo}>
 				<option value="1">Octoprint</option>
-				<option value="2">Ultimaker 3 Extended & Ultimaker API </option>
-				<option value="3">Ultimaker S3 & Ultimaker API </option>
-				<option value="4">Prusa Mini & WebUSB</option>
-				<option value="5">Manual</option>
-				<option value="6">Dummy Printer</option>
+				<option value="2">Ultimaker API</option>
+				<option value="3">WebUSB (Prusa Mini)</option>
+				<option value="4">Manual</option>
+				<option value="5">Dummy Printer</option>
 				<option value="" disabled>-- Coming Soon--</option>
 				<option value="" disabled>Prusa MK3S & WebUSB</option>
 				<option value="" disabled>Eiger.io Fleet Manager</option>
@@ -103,49 +91,23 @@
 
 <small class="text-muted">
 	<ul class="list-inline">
-		<li class="list-inline-item">| Machine Type: {machineType}</li>
-		<li class="list-inline-item">| Machine Status: {machineStatus}</li>
-		<li class="list-inline-item">
-			| Machine Available: {machineAvailable}
-		</li>
-		<li class="list-inline-item">| Job Status: {jobStatus}</li>
-		<li class="list-inline-item">| Contract Id: {contractId}</li>
+		<li class="list-inline-item">| Machine Type: {$machineType}</li>
+		<li class="list-inline-item">| Machine Available: {$available}</li>
+		<li class="list-inline-item">| Job Status: {$jobStatus}</li>
+		<li class="list-inline-item">| Contract Id: {$contractId}</li>
 	</ul>
 </small>
 
 {#if machineConnectionCombo == "1"}
-	<Octoprint
-		bind:machineAvailable
-		bind:gcode
-		bind:machineType
-		bind:jobStatus
-		bind:machineStatus
-	/>
-{:else if machineConnectionCombo == "6"}
-	<Dummy bind:jobStatus bind:gcode bind:machineStatus bind:machineAvailable />
-{:else if machineConnectionCombo == "2" || machineConnectionCombo == "3"}
-	<Ultimaker
-		bind:jobStatus
-		bind:gcode
-		bind:machineStatus
-		bind:machineAvailable
-	/>
-{:else if machineConnectionCombo == "4"}
-	<WebSerialPrusaMini bind:gcode bind:machineAvailable />
+	<Octoprint />
 {:else if machineConnectionCombo == "5"}
-	<ManualPrinter
-		bind:machineAvailable
-		bind:gcode
-		bind:machineType
-		bind:jobStatus
-		bind:machineStatus
-	/>
+	<Dummy />
+{:else if machineConnectionCombo == "2"}
+	<Ultimaker />
+{:else if machineConnectionCombo == "3"}
+	<WebSerialPrusaMini />
+{:else if machineConnectionCombo == "4"}
+	<ManualPrinter />
 {/if}
 <h5 class="mt-3">Connect Machine to BAM</h5>
-<MachineAgent
-	bind:machineAvailable
-	bind:gcode
-	bind:machineType
-	bind:contractId
-	bind:jobStatus
-/>
+<MachineAgent />

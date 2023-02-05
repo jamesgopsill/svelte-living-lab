@@ -15,16 +15,14 @@
 		UltimakerClient,
 		UltimakerJobTargetState,
 	} from "@jamesgopsill/ultimaker-client"
-	import { MachineJobStates, MachineStates } from "../../definitions/enums"
+	import { MachineJobStates, MachineTypes } from "../../definitions/enums"
+	import { machineAgent } from "../../classes/machine-agent"
 
-	export let jobStatus: MachineJobStates
-	export let gcode: string
-	export let machineStatus: MachineStates
-	export let machineAvailable: boolean
+	let { gcode, available, jobStatus, machineType } = machineAgent
 
 	let url = ""
 	let connect = false
-	let client: UltimakerClient = null
+	let client: UltimakerClient | null = null
 	let interval: any = null
 	let name = "-"
 	let status = "-"
@@ -78,17 +76,17 @@
 			current: 0.0,
 			target: 0.0,
 		}
-		machineStatus = MachineStates.OFFLINE
-		jobStatus = MachineJobStates.NULL
+		// machineStatus = MachineStates.OFFLINE
+		jobStatus.set(MachineJobStates.NULL)
 		clearInterval(interval)
 	}
 
-	$: if (gcode && client) {
-		machineAvailable = false
-		client.postJob("bam", gcode).then(() => {
-			gcode = ""
-			machineStatus = MachineStates.PRINTING
-			jobStatus = MachineJobStates.PRINTING
+	$: if ($gcode && client) {
+		available.set(false)
+		client.postJob("bam", $gcode).then(() => {
+			gcode.set("")
+			//machineStatus.set(MachineStates.PRINTING)
+			jobStatus.set(MachineJobStates.PRINTING)
 		})
 	}
 </script>
@@ -112,6 +110,13 @@
 <Accordion>
 	<AccordionItem>
 		<p class="m-0" slot="header">Ultimaker Settings <Icon name="gear" /></p>
+		<InputGroup size="sm" class="mb-3">
+			<InputGroupText>Select your machine.</InputGroupText>
+			<Input type="select" name="select" bind:value={$machineType}>
+				<option value={MachineTypes.UM3E}>Ultimaker 3 Extended</option>
+				<option value={MachineTypes.UMS3}>Ultimaker S3</option>
+			</Input>
+		</InputGroup>
 		<InputGroup size="sm">
 			<InputGroupText>URL</InputGroupText>
 			<Input
@@ -131,7 +136,7 @@
 		label="Toggle to connect/disconnect printer"
 	/>
 	<Input
-		bind:checked={machineAvailable}
+		bind:checked={$available}
 		type="switch"
 		label="Toggle to make available to network"
 	/>

@@ -16,24 +16,17 @@
 		PrinterStatus,
 		JobInformation,
 	} from "@jamesgopsill/octoprint-client"
-	import {
-		MachineJobStates,
-		MachineStates,
-		MachineTypes,
-	} from "../../definitions/enums"
+	import { MachineJobStates, MachineTypes } from "../../definitions/enums"
+	import { machineAgent } from "../../classes/machine-agent"
 
-	export let jobStatus: MachineJobStates
-	export let gcode: string
-	export let machineStatus: MachineStates
-	export let machineAvailable: boolean
-	export let machineType: MachineTypes
+	let { gcode, available, jobStatus, machineType } = machineAgent
 
 	let url = "" // URL of Octopi
 	let token = "" // API token
 	let stats: PrinterStatus | null = null
 	let jobInformation: JobInformation | null = null
 	let statsInterval: any
-	let client: OctoPrintClient = null
+	let client: OctoPrintClient | null = null
 	let connect = false
 	let files: any
 
@@ -59,15 +52,15 @@
 		stats = null
 	}
 
-	$: if (gcode) {
-		machineAvailable = false
-		client.uploadGcode("local", "bam.gcode", gcode).then(() => {
+	$: if ($gcode && client) {
+		available.set(false)
+		client.uploadGcode("local", "bam.gcode", $gcode).then(() => {
 			console.log("gcode uploaded")
 			client.print("bam.gcode").then(() => {
 				console.log("print command issued")
-				gcode = ""
-				machineStatus = MachineStates.PRINTING
-				jobStatus = MachineJobStates.PRINTING
+				gcode.set("")
+				// machineStatus.set(MachineStates.PRINTING)
+				jobStatus.set(MachineJobStates.PRINTING)
 			})
 		})
 	}
@@ -132,12 +125,9 @@
 		<p class="m-0" slot="header">Octoprint Settings <Icon name="gear" /></p>
 		<InputGroup size="sm" class="mb-3">
 			<InputGroupText>Select your machine.</InputGroupText>
-			<Input type="select" name="select" bind:value={machineType}>
+			<Input type="select" name="select" bind:value={$machineType}>
 				<option value={MachineTypes.PRUSA_MINI}>Prusa Mini</option>
 				<option value={MachineTypes.PRUSA_MK3S}>Prusa MK3S</option>
-				<option value={MachineTypes.UM3E}>Ultimaker 3 Extended</option>
-				<option value={MachineTypes.UMS3}>Ultimaker S3</option>
-				<option value={MachineTypes.DUMMY}>Dummy</option>
 			</Input>
 		</InputGroup>
 
@@ -170,7 +160,7 @@
 		label="Toggle to connect/disconnect printer"
 	/>
 	<Input
-		bind:checked={machineAvailable}
+		bind:checked={$available}
 		type="switch"
 		label="Toggle to make available to network"
 	/>
