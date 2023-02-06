@@ -10,6 +10,8 @@ export class JobAgent {
 	connected = writable<boolean>(false)
 	state = writable<JobStates>(JobStates.NOT_ONLINE)
 	gcode = writable<{ [k: string]: string }>({})
+	estimatedPrintTime = writable<number>(0)
+	createdDate: number = new Date().getTime()
 	socket: Socket | null
 	messages = writable<string[]>([])
 

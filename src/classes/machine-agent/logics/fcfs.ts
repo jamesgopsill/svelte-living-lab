@@ -6,11 +6,11 @@ import { get } from "svelte/store"
 export function fcfs(this: MachineAgent) {
 	if (this.responses.length > 0) {
 		let idx = 0
-		let joined = 99999999999999
+		let createdDate = 99999999999999
 		for (const [i, job] of this.responses.entries()) {
-			if (job.body.joined < joined) {
+			if (job.body.createdDate < createdDate) {
 				idx = i
-				joined = job.body.joined
+				createdDate = job.body.createdDate
 			}
 		}
 		const job = this.responses[idx]

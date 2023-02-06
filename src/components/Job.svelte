@@ -16,16 +16,17 @@
 	import { JobAgent } from "../classes/job-agent"
 
 	let jobAgent = new JobAgent()
-	let { name, gcode, id, connected, messages, state } = jobAgent
+	let { name, gcode, id, connected, messages, state, estimatedPrintTime } =
+		jobAgent
 	let files: any
 	let fileInput: any
 
 	const connect = (): void => {
 		if (!$bamAccessKey || !$bamGroup || !$bamBrokerURL) {
-			console.log("Information Missing")
+			alert("BAM Connection Settings Missing")
 			return
 		}
-		jobAgent.connect($bamBrokerURL, $bamAccessKey, $bamGroup)
+		jobAgent.connect()
 	}
 
 	$: {
@@ -36,18 +37,39 @@
 				let g: string = event.target.result
 				// analyse code for printer types
 				if (g.includes("Ultimaker 3 Extended")) {
+					// assuming cura
+					const re = new RegExp(";TIME_ELAPSED:([0-9.]+)", "g")
+					const matches = [...g.matchAll(re)]
+					const time = parseFloat(matches.pop()[1])
+					if (time) estimatedPrintTime.set(time)
 					gcode.update((v) => {
 						v[MachineTypes.UM3E] = g
 						return v
 					})
 				}
 				if (g.includes("PRINTER_MODEL_MINI")) {
+					// Assuming prusaslicer
+					// ; estimated printing time (normal mode) = 20m 29s
+					// TODO: update for hours and days
+					const re = new RegExp(
+						"; estimated printing time \\(normal mode\\) = ([0-9]+)m ([0-9]+)s",
+						"g"
+					)
+					const matches = [...g.matchAll(re)]
+					const time =
+						parseFloat(matches[0][1]) * 60 + parseFloat(matches[0][2])
+					if (time) estimatedPrintTime.set(time)
 					gcode.update((v) => {
 						v[MachineTypes.PRUSA_MINI] = g
 						return v
 					})
 				}
 				if (g.includes("Ultimaker S3")) {
+					// assuming cura
+					const re = new RegExp(";TIME_ELAPSED:([0-9.]+)", "g")
+					const matches = [...g.matchAll(re)]
+					const time = parseFloat(matches.pop()[1])
+					if (time) estimatedPrintTime.set(time)
 					gcode.update((v) => {
 						v[MachineTypes.UMS3] = g
 						return v
@@ -117,6 +139,7 @@
 
 		<small class="text-muted">
 			<ul>
+				<li>Estimated Print Time: {$estimatedPrintTime}</li>
 				<li>Connecting to: {$bamBrokerURL}</li>
 				<li>Group: {$bamGroup}</li>
 				<li>

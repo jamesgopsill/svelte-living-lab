@@ -5,13 +5,10 @@ import { handleAllJobsMessage } from "./handle-all-jobs-message"
 import { handleConnect } from "./handle-connect"
 import { handleConnectionError } from "./handle-connection-error"
 import { handleDirectMessage } from "./handle-direct-message"
+import { bamAccessKey, bamBrokerURL, bamGroup } from "../../stores/settings"
+import { get } from "svelte/store"
 
-export function connect(
-	this: JobAgent,
-	url: string,
-	accessKey: string,
-	group: string
-) {
+export function connect(this: JobAgent) {
 	console.log("Connecting to BAM")
 	let isThereGCode = false
 	for (const [_, value] of Object.entries(this.gcode)) {
@@ -27,10 +24,14 @@ export function connect(
 		return u
 	})
 
+	const key = get(bamAccessKey)
+	const group = get(bamGroup)
+	const url = get(bamBrokerURL)
+
 	// Creating the connection
 	const ioConfig = {
 		auth: {
-			token: accessKey,
+			token: key,
 		},
 		extraHeaders: {
 			"agent-type": "job",
@@ -38,7 +39,6 @@ export function connect(
 		},
 		path: "/socket/",
 	}
-	console.log(ioConfig)
 
 	this.socket = io(url, ioConfig)
 		.on(SocketEvents.CONNECT, handleConnect.bind(this))

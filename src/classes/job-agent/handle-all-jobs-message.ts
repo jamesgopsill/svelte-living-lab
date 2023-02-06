@@ -26,7 +26,10 @@ export function handleAllJobsMessage(this: JobAgent, msg: AllMessage): void {
 			to: msg.from,
 			from: this.socket.id,
 			subject: MessageSubjects.JOB_IS_AVAILABLE,
-			body: {},
+			body: {
+				createdDate: this.createdDate,
+				printTime: this.estimatedPrintTime,
+			},
 			extra: {},
 		}
 		this.socket.emit(SocketEvents.DIRECT, response)

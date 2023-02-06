@@ -2,6 +2,8 @@ import { io, type Socket } from "socket.io-client"
 import type { ContractUpdate } from "../../definitions/interfaces"
 import { SocketEvents } from "../../definitions/enums"
 import { writable } from "svelte/store"
+import { bamAccessKey, bamBrokerURL, bamGroup } from "../../stores/settings"
+import { get } from "svelte/store"
 
 export class Tracker {
 	contractId = writable<string>("")
@@ -10,11 +12,14 @@ export class Tracker {
 
 	constructor() {}
 
-	getUpdates = function (url: string, accessKey: string, group: string) {
+	getUpdates = function () {
+		const key = get(bamAccessKey)
+		const group = get(bamGroup)
+		const url = get(bamBrokerURL)
 		// Creating the connection
 		const ioConfig = {
 			auth: {
-				token: accessKey,
+				token: key,
 			},
 			extraHeaders: {
 				"agent-type": "job",
@@ -22,7 +27,6 @@ export class Tracker {
 			},
 			path: "/socket/",
 		}
-		console.log(ioConfig)
 
 		this.socket = io(url, ioConfig)
 			.on(SocketEvents.CONNECT, () => {

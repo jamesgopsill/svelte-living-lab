@@ -6,7 +6,6 @@
 		FormGroup,
 		Button,
 	} from "sveltestrap"
-	import { bamAccessKey, bamGroup, bamBrokerURL } from "../stores/settings"
 	import { Tracker } from "../classes/tracker"
 
 	let tracker = new Tracker()
@@ -31,7 +30,7 @@
 		color="primary"
 		disabled={false}
 		on:click={() => {
-			tracker.getUpdates($bamBrokerURL, $bamAccessKey, $bamGroup)
+			tracker.getUpdates()
 		}}
 	>
 		Get Updates
