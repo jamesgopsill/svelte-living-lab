@@ -1,22 +1,35 @@
 import { get } from "svelte/store"
 import type { MachineAgent } from "."
-import { MessageSubjects, SocketEvents } from "../../definitions/enums"
-import type { AllMessage, DirectMessage } from "../../definitions/interfaces"
+import {
+	MachineAgentLogics,
+	MessageSubjects,
+	SocketEvents,
+} from "../../definitions/enums"
+import type { AllMessage } from "../../definitions/interfaces"
+import { fcfs } from "./logics/fcfs"
+import { frfs } from "./logics/frfs"
+import { lpt } from "./logics/lpt"
+import { spt } from "./logics/spt"
 
 function selectJob(this: MachineAgent) {
-	if (this.responses.length > 0) {
-		const job = this.responses[0]
-		const msg: DirectMessage = {
-			from: this.socket.id,
-			to: job.from,
-			subject: MessageSubjects.MACHINE_HAS_CHOSEN_A_JOB,
-			body: {
-				machineType: get(this.machineType),
-			},
-			extra: {},
-		}
-		this.socket.emit(SocketEvents.DIRECT, msg)
+	switch (get(this.logic)) {
+		case MachineAgentLogics.FIRST_RESPONSE_FIRST_SERVE:
+			frfs.bind(this)()
+			break
+		case MachineAgentLogics.FIRST_COME_FIRST_SERVE:
+			fcfs.bind(this)()
+			break
+		case MachineAgentLogics.LONGEST_PRINT_TIME:
+			lpt.bind(this)()
+			break
+		case MachineAgentLogics.SHORTEST_PRINT_TIME:
+			spt.bind(this)()
+			break
+		default:
+			frfs.bind(this)()
+			break
 	}
+	this.responses = []
 }
 
 export function handleConnect(this: MachineAgent) {
@@ -34,7 +47,7 @@ export function handleConnect(this: MachineAgent) {
 			}
 			this.socket.emit(SocketEvents.ALL_JOBS, msg)
 			// Will need to check this.
-			setTimeout(selectJob.bind(this), 3000)
+			setTimeout(selectJob.bind(this)(), 3000)
 		}
 	}, 6000)
 }

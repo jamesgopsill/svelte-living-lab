@@ -121,8 +121,10 @@
 </small>
 
 <Accordion>
-	<AccordionItem>
-		<p class="m-0" slot="header">Octoprint Settings <Icon name="gear" /></p>
+	<AccordionItem active>
+		<p class="m-0" slot="header">
+			<small>Octoprint Settings <Icon name="gear" /></small>
+		</p>
 		<InputGroup size="sm" class="mb-3">
 			<InputGroupText>Select your machine.</InputGroupText>
 			<Input type="select" name="select" bind:value={$machineType}>

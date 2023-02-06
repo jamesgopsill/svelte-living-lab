@@ -1,6 +1,10 @@
 import type { Socket } from "socket.io-client"
 import { writable } from "svelte/store"
-import { MachineJobStates, MachineTypes } from "../../definitions/enums"
+import {
+	MachineAgentLogics,
+	MachineJobStates,
+	MachineTypes,
+} from "../../definitions/enums"
 import type { DirectMessage } from "../../definitions/interfaces"
 import { connect } from "./connect"
 import { disconnect } from "./disconnect"
@@ -13,6 +17,9 @@ export class MachineAgent {
 	contractId = writable<string>("")
 	socketId = writable<string>("")
 	jobStatus = writable<MachineJobStates>(MachineJobStates.NULL)
+	logic = writable<MachineAgentLogics>(
+		MachineAgentLogics.FIRST_RESPONSE_FIRST_SERVE
+	)
 
 	socket: Socket | null = null
 	responses: DirectMessage[] = []

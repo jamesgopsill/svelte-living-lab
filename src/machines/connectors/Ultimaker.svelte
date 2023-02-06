@@ -91,8 +91,6 @@
 	}
 </script>
 
-<hr />
-
 <small class="text-muted">
 	<ul class="list-inline">
 		<li class="list-inline-item">
@@ -108,8 +106,10 @@
 >
 
 <Accordion>
-	<AccordionItem>
-		<p class="m-0" slot="header">Ultimaker Settings <Icon name="gear" /></p>
+	<AccordionItem active>
+		<p class="m-0" slot="header">
+			<small> Ultimaker Settings <Icon name="gear" /></small>
+		</p>
 		<InputGroup size="sm" class="mb-3">
 			<InputGroupText>Select your machine.</InputGroupText>
 			<Input type="select" name="select" bind:value={$machineType}>

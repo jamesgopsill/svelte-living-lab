@@ -83,7 +83,7 @@
 </small>
 
 <Accordion>
-	<AccordionItem>
+	<AccordionItem active>
 		<p class="m-0" slot="header">
 			<small
 				>WebUSB Settings (Chrome or Edge required) <Icon name="gear" /></small

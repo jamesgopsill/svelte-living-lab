@@ -58,3 +58,10 @@ export enum MachineJobStates {
 	COMPLETE = "complete",
 	QUEUED = "queued",
 }
+
+export enum MachineAgentLogics {
+	FIRST_COME_FIRST_SERVE = "fcfs",
+	FIRST_RESPONSE_FIRST_SERVE = "frfs",
+	SHORTEST_PRINT_TIME = "spt",
+	LONGEST_PRINT_TIME = "lpt",
+}

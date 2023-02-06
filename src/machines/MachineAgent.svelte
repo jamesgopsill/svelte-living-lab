@@ -1,18 +1,43 @@
 <script lang="ts">
-	import { FormGroup, Button } from "sveltestrap"
+	import { MachineAgentLogics } from "../definitions/enums"
+	import {
+		FormGroup,
+		Button,
+		InputGroup,
+		InputGroupText,
+		Input,
+	} from "sveltestrap"
 	import { machineAgent } from "../classes/machine-agent"
 	import { bamGroup, bamBrokerURL } from "../stores/settings"
 
-	let { socketId } = machineAgent
+	let { socketId, logic } = machineAgent
 </script>
 
 <small class="text-muted">
-	<ul class="list-inline">
+	<ul class="list-inline mt-3">
 		<li class="list-inline-item">| Broker URL: {$bamBrokerURL}</li>
 		<li class="list-inline-item">| Group: {$bamGroup}</li>
 		<li class="list-inline-item">| Connected Id: {$socketId}</li>
 	</ul>
 </small>
+
+<InputGroup size="sm" class="mb-2">
+	<InputGroupText>Selection Logic</InputGroupText>
+	<Input type="select" name="select" bind:value={$logic}>
+		<option value={MachineAgentLogics.FIRST_RESPONSE_FIRST_SERVE}
+			>First Response First Serve</option
+		>
+		<option value={MachineAgentLogics.FIRST_COME_FIRST_SERVE}
+			>First Come First Serve</option
+		>
+		<option value={MachineAgentLogics.SHORTEST_PRINT_TIME}
+			>Shortest Print Time</option
+		>
+		<option value={MachineAgentLogics.LONGEST_PRINT_TIME}
+			>Longest Print Time</option
+		>
+	</Input>
+</InputGroup>
 
 <FormGroup>
 	<Button
