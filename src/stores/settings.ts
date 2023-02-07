@@ -1,7 +1,6 @@
 // https://dev.to/danawoodman/svelte-quick-tip-connect-a-store-to-local-storage-4idi
 
 import { writable } from "svelte/store"
-import { MachineJobStates, MachineTypes } from "../definitions/enums"
 
 const storedBamAccessKey = localStorage.bamAccessKey
 

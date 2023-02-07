@@ -30,7 +30,7 @@ export function handleAllJobsMessage(this: JobAgent, msg: AllMessage): void {
 				createdDate: this.createdDate,
 				printTime: this.estimatedPrintTime,
 			},
-			extra: {},
+			extra: msg.extra,
 		}
 		this.socket.emit(SocketEvents.DIRECT, response)
 	}

@@ -5,7 +5,9 @@ export interface AllMessage {
 	from: string
 	subject: string
 	body: { [key: string]: any }
-	extra: { [key: string]: any }
+	extra: {
+		thread: string
+	}
 }
 
 export interface DirectMessage extends AllMessage {

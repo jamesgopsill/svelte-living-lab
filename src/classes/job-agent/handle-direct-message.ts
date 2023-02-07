@@ -29,7 +29,7 @@ export function handleDirectMessage(this: JobAgent, msg: DirectMessage): void {
 				body: {
 					gcode: this.gcode[msg.body.machineType],
 				},
-				extra: {},
+				extra: msg.extra,
 			}
 			this.socket.emit(SocketEvents.DIRECT, response)
 			//@ts-ignore
@@ -48,7 +48,7 @@ export function handleDirectMessage(this: JobAgent, msg: DirectMessage): void {
 				from: this.socket.id,
 				subject: MessageSubjects.JOB_HAS_DECLINED_MACHINES_OFFER,
 				body: {},
-				extra: {},
+				extra: msg.extra,
 			}
 			this.socket.emit(SocketEvents.DIRECT, response)
 		}
@@ -65,7 +65,7 @@ export function handleDirectMessage(this: JobAgent, msg: DirectMessage): void {
 			from: this.socket.id,
 			subject: MessageSubjects.JOB_HAS_DECLINED_MACHINES_OFFER,
 			body: {},
-			extra: {},
+			extra: msg.extra,
 		}
 		this.socket.emit(SocketEvents.DIRECT, response)
 		return

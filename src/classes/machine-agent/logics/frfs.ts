@@ -13,7 +13,7 @@ export function frfs(this: MachineAgent) {
 			body: {
 				machineType: get(this.machineType),
 			},
-			extra: {},
+			extra: job.extra,
 		}
 		this.socket.emit(SocketEvents.DIRECT, msg)
 	}

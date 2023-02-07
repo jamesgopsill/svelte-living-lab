@@ -10,6 +10,7 @@ import { fcfs } from "./logics/fcfs"
 import { frfs } from "./logics/frfs"
 import { lpt } from "./logics/lpt"
 import { spt } from "./logics/spt"
+import { v4 as uuidv4 } from "uuid"
 
 function selectJob(this: MachineAgent) {
 	switch (get(this.logic)) {
@@ -43,7 +44,9 @@ export function handleConnect(this: MachineAgent) {
 				body: {
 					machineType: get(this.machineType),
 				},
-				extra: {},
+				extra: {
+					thread: uuidv4(),
+				},
 			}
 			this.socket.emit(SocketEvents.ALL_JOBS, msg)
 			// Will need to check this.

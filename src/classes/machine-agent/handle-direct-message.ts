@@ -35,7 +35,7 @@ export function handleDirectMessage(this: MachineAgent, msg: DirectMessage) {
 				body: {
 					id: get(this.contractId),
 				},
-				extra: {},
+				extra: msg.extra,
 			}
 			this.socket.emit(SocketEvents.DIRECT, response)
 			const postUpdate: ContractUpdate = {
