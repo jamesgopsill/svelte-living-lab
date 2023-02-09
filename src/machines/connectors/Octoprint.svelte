@@ -133,7 +133,7 @@
 			</Input>
 		</InputGroup>
 
-		<InputGroup size="sm">
+		<InputGroup size="sm" class="mb-3">
 			<InputGroupText>Octoprint URL</InputGroupText>
 			<Input
 				type="text"

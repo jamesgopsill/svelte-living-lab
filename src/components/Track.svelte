@@ -9,7 +9,7 @@
 	import { Tracker } from "../classes/tracker"
 
 	let tracker = new Tracker()
-	let { contractId, messages } = tracker
+	let { contractId, messages, connected } = tracker
 </script>
 
 <h2 class="mt-3 mb-3">Track your contract.</h2>
@@ -28,7 +28,7 @@
 	<Button
 		size="sm"
 		color="primary"
-		disabled={false}
+		disabled={$connected}
 		on:click={() => {
 			tracker.getUpdates()
 		}}
