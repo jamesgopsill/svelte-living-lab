@@ -6,10 +6,7 @@ import {
 	MessageSubjects,
 	SocketEvents,
 } from "../../definitions/enums"
-import type {
-	ContractUpdate,
-	DirectMessage,
-} from "../../definitions/interfaces"
+import type { DirectMessage } from "../../definitions/interfaces"
 
 export function handleDirectMessage(this: MachineAgent, msg: DirectMessage) {
 	console.log("|- MachineAgent: Received a direct message")
@@ -25,6 +22,11 @@ export function handleDirectMessage(this: MachineAgent, msg: DirectMessage) {
 			console.log("|- MachineAgent: Passing on the GCode")
 			this.responses = []
 			this.contractId.set(uuidv4())
+			console.log(msg.body)
+			if (!msg.body.gcode) {
+				alert("ERROR: no gcode in body")
+				break
+			}
 			this.gcode.set(msg.body.gcode)
 			this.jobStatus.set(MachineJobStates.QUEUED)
 			// TODO: this within the agent when the gcode appears
@@ -38,11 +40,7 @@ export function handleDirectMessage(this: MachineAgent, msg: DirectMessage) {
 				extra: msg.extra,
 			}
 			this.socket.emit(SocketEvents.DIRECT, response)
-			const postUpdate: ContractUpdate = {
-				id: get(this.contractId),
-				msg: "Queued",
-			}
-			this.socket.emit(SocketEvents.POST_CONTRACT, postUpdate)
+			this.postUpdate("Queued")
 			break
 		case MessageSubjects.JOB_HAS_DECLINED_MACHINES_OFFER:
 			this.responses = []

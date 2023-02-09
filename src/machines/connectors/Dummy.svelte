@@ -6,7 +6,9 @@
 	let { gcode, available, jobStatus, contractId } = machineAgent
 
 	$: {
-		if ($gcode) {
+		console.log("Reaction activated")
+		console.log($gcode)
+		if ($gcode.length > 0) {
 			console.log("Machine Details Updated")
 			// If machine code is available
 			available.set(false)

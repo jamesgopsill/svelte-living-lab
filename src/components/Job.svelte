@@ -1,10 +1,8 @@
 <script lang="ts">
 	import {
 		Button,
-		FormGroup,
+		ButtonGroup,
 		Input,
-		ListGroup,
-		ListGroupItem,
 		Row,
 		Col,
 		Badge,
@@ -121,19 +119,24 @@
 			{/each}
 		</div>
 
-		<FormGroup class="mt-3">
-			<Button size="sm" color="primary" disabled={false} on:click={connect}>
+		<ButtonGroup class="mt-3">
+			<Button
+				size="sm"
+				color="primary"
+				disabled={$connected}
+				on:click={connect}
+			>
 				Connect and Submit
 			</Button>
 			<Button
 				size="sm"
 				color="danger"
-				disabled={false}
+				disabled={!$connected}
 				on:click={() => jobAgent.disconnect()}
 			>
 				Disconnect
 			</Button>
-		</FormGroup>
+		</ButtonGroup>
 
 		<hr />
 
@@ -155,10 +158,12 @@
 
 	<Col sm="12" md="6" class="mt-4">
 		<h5>Log</h5>
-		<ListGroup>
-			{#each $messages as msg}
-				<ListGroupItem><small>{msg}</small></ListGroupItem>
-			{/each}
-		</ListGroup>
+		<small>
+			<ol>
+				{#each $messages as msg}
+					<li>{msg}</li>
+				{/each}
+			</ol>
+		</small>
 	</Col>
 </Row>

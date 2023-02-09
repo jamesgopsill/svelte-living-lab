@@ -41,7 +41,7 @@
 <small class="text-muted">
 	<ul>
 		{#each $messages as m}
-			<li>{m.msg}</li>
+			<li>{m.date}: {m.msg}</li>
 		{/each}
 	</ul>
 </small>

@@ -1,3 +1,4 @@
+import { get } from "svelte/store"
 import type { JobAgent } from "."
 import {
 	JobStates,
@@ -7,20 +8,19 @@ import {
 import type { AllMessage, DirectMessage } from "../../definitions/interfaces"
 
 export function handleAllJobsMessage(this: JobAgent, msg: AllMessage): void {
+	const state = get(this.state)
+	const gcode = get(this.gcode)
 	this.messages.update((u) => {
 		u.push(
-			`${new Date().toISOString()}: received ALL_JOBS message. I am ${
-				this.state
-			}`
+			`${new Date().toISOString()}: received ALL_JOBS message. I am ${state}`
 		)
 		return u
 	})
 	// Respond to the machine
 	if (
 		msg.subject == MessageSubjects.MACHINE_IS_LOOKING_FOR_JOBS &&
-		//@ts-expect-error
-		this.state == JobStates.AVAILABLE &&
-		this.gcode[msg.body.machineType]
+		state == JobStates.AVAILABLE &&
+		gcode[msg.body.machineType]
 	) {
 		const response: DirectMessage = {
 			to: msg.from,

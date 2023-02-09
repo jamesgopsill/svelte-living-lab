@@ -1,4 +1,5 @@
 import { get } from "svelte/store"
+import { v4 as uuidv4 } from "uuid"
 import type { MachineAgent } from "."
 import {
 	MachineAgentLogics,
@@ -10,7 +11,6 @@ import { fcfs } from "./logics/fcfs"
 import { frfs } from "./logics/frfs"
 import { lpt } from "./logics/lpt"
 import { spt } from "./logics/spt"
-import { v4 as uuidv4 } from "uuid"
 
 function selectJob(this: MachineAgent) {
 	switch (get(this.logic)) {
@@ -36,8 +36,9 @@ function selectJob(this: MachineAgent) {
 export function handleConnect(this: MachineAgent) {
 	this.socketId.set(this.socket.id)
 	this.interval = setInterval(() => {
-		console.log(`|- MachineAgent: loop, Available: ${get(this.available)}}`)
-		if (get(this.available)) {
+		const available = get(this.available)
+		console.log(`|- MachineAgent Loop: isAvailable: ${available}`)
+		if (available) {
 			const msg: AllMessage = {
 				from: this.socket.id,
 				subject: MessageSubjects.MACHINE_IS_LOOKING_FOR_JOBS,

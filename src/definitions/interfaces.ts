@@ -17,7 +17,13 @@ export interface DirectMessage extends AllMessage {
 /**
  * The format of a progress update request.
  */
-export interface ContractUpdate {
-	id: string
+export interface ContractEntry {
+	contractId: string
 	msg: string
+}
+
+export interface ContractInformation {
+	agentId: string
+	msg: string
+	date: string
 }

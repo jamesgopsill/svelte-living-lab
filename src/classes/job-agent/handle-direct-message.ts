@@ -1,3 +1,4 @@
+import { get } from "svelte/store"
 import type { JobAgent } from "."
 import {
 	JobStates,
@@ -7,6 +8,9 @@ import {
 import type { DirectMessage } from "../../definitions/interfaces"
 
 export function handleDirectMessage(this: JobAgent, msg: DirectMessage): void {
+	const state = get(this.state)
+	const gcode = get(this.gcode)
+
 	this.messages.update((u) => {
 		u.push(`${new Date().toISOString()}: Job received DIRECT message`)
 		return u
@@ -14,25 +18,24 @@ export function handleDirectMessage(this: JobAgent, msg: DirectMessage): void {
 
 	if (
 		msg.subject == MessageSubjects.MACHINE_HAS_CHOSEN_A_JOB &&
-		//@ts-expect-error
-		this.state == JobStates.AVAILABLE
+		state == JobStates.AVAILABLE
 	) {
 		this.messages.update((u) => {
 			u.push(`${new Date().toISOString()}: Job responding with accept.`)
 			return u
 		})
-		if (this.gcode[msg.body.machineType]) {
+		if (gcode[msg.body.machineType]) {
 			const response: DirectMessage = {
 				to: msg.from,
 				from: this.socket.id,
 				subject: MessageSubjects.JOB_HAS_ACCEPTED_MACHINES_OFFER,
 				body: {
-					gcode: this.gcode[msg.body.machineType],
+					gcode: gcode[msg.body.machineType],
 				},
 				extra: msg.extra,
 			}
+			console.log(response)
 			this.socket.emit(SocketEvents.DIRECT, response)
-			//@ts-ignore
 			this.state.set(JobStates.SELECTED)
 			this.messages.update((u) => {
 				u.push(`${new Date().toISOString()}: Job has been accepted.`)
@@ -76,6 +79,7 @@ export function handleDirectMessage(this: JobAgent, msg: DirectMessage): void {
 			u.push(`${new Date().toISOString()}: Contracts ID ${msg.body.id}`)
 			return u
 		})
+		this.disconnect()
 		return
 	}
 
