@@ -38,17 +38,6 @@
 			available.set(false)
 		}
 	}
-
-	/*
-	$: {
-		if (machineAvailable && machineStatus == MachineStates.OFFLINE) {
-			machineStatus = MachineStates.IDLE
-		}
-		if (!machineAvailable && machineStatus == MachineStates.IDLE) {
-			machineStatus = MachineStates.OFFLINE
-		}
-	}
-	*/
 </script>
 
 <FormGroup>

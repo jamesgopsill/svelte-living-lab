@@ -1,15 +1,6 @@
 <script lang="ts">
 	import MachineAgent from "./MachineAgent.svelte"
-	import {
-		Input,
-		InputGroup,
-		InputGroupText,
-		Row,
-		Col,
-		Button,
-		TabContent,
-		TabPane,
-	} from "sveltestrap"
+	import { Input, InputGroup, InputGroupText, Button, Icon } from "sveltestrap"
 	import {
 		MachineConnectionTypes,
 		MachineJobStates,
@@ -66,33 +57,32 @@
 	}
 </script>
 
+<h4 class="mt-2">
+	1. Connect to a BAM network <a href="#/settings"><Icon name="gear" /></a>
+</h4>
+
 <MachineAgent />
 
-<h5>Select Machine</h5>
+<h4 class="mt-2 mb-3">2. Select a machine</h4>
 
-<Row class="mt-4">
-	<Col xs={8}>
-		<InputGroup size="sm" class="mb-2">
-			<InputGroupText>Connection</InputGroupText>
-			<Input type="select" name="select" bind:value={machineConnectionCombo}>
-				<option value="1">Octoprint</option>
-				<option value="2">Ultimaker API</option>
-				<option value="3">WebUSB (Prusa Mini)</option>
-				<option value="4">Manual</option>
-				<option value="5">Dummy Printer</option>
-				<option value="" disabled>-- Coming Soon--</option>
-				<option value="" disabled>Prusa MK3S & WebUSB</option>
-				<option value="" disabled>Eiger.io Fleet Manager</option>
-				<option value="" disabled>Ultimaker Digital Factory</option>
-			</Input>
-		</InputGroup>
-	</Col>
-	<Col xs={4}>
-		<Button size="sm" color="primary" on:click={resetStates}
-			>Reset Job State</Button
-		>
-	</Col>
-</Row>
+<InputGroup size="sm" class="mb-2">
+	<InputGroupText>Connection</InputGroupText>
+	<Input type="select" name="select" bind:value={machineConnectionCombo}>
+		<option value="1">Octoprint</option>
+		<option value="2">Ultimaker API</option>
+		<option value="3">WebUSB (Prusa Mini)</option>
+		<option value="4">Manual</option>
+		<option value="5">Dummy Printer</option>
+		<option value="" disabled>-- Coming Soon--</option>
+		<option value="" disabled>Prusa MK3S & WebUSB</option>
+		<option value="" disabled>Eiger.io Fleet Manager</option>
+		<option value="" disabled>Ultimaker Digital Factory</option>
+	</Input>
+	<Button size="sm" color="warning" on:click={resetStates}
+		>Reset Job State</Button
+	>
+</InputGroup>
+
 <small class="text-muted">
 	<ul class="list-inline">
 		<li class="list-inline-item">| Machine Type: {$machineType}</li>

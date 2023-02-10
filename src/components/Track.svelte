@@ -5,6 +5,7 @@
 		Input,
 		FormGroup,
 		Button,
+		ButtonGroup,
 	} from "sveltestrap"
 	import { Tracker } from "../classes/tracker"
 
@@ -12,19 +13,15 @@
 	let { contractId, messages, connected } = tracker
 </script>
 
-<h2 class="mt-3 mb-3">Track your contract.</h2>
+<h3 class="mt-3 mb-3">Track a contract</h3>
 
-<InputGroup class="mb-1" size="sm">
+<InputGroup class="mb-3" size="sm">
 	<InputGroupText>Contract</InputGroupText>
 	<Input
 		placeholder="Contract Id"
 		bind:value={$contractId}
 		invalid={!$contractId}
-		feedback="Contract Id Required"
 	/>
-</InputGroup>
-
-<FormGroup class="mt-3">
 	<Button
 		size="sm"
 		color="primary"
@@ -35,9 +32,9 @@
 	>
 		Get Updates
 	</Button>
-</FormGroup>
+</InputGroup>
 
-<p class="lead">Messages</p>
+<h4>Messages</h4>
 <small class="text-muted">
 	<ul>
 		{#each $messages as m}

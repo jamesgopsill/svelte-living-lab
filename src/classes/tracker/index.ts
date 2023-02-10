@@ -13,7 +13,6 @@ export class Tracker {
 	constructor() {}
 
 	getUpdates = function () {
-		console.log("Getting updates")
 		const key = get(bamAccessKey)
 		const group = get(bamGroup)
 		const url = get(bamBrokerURL)
@@ -32,7 +31,6 @@ export class Tracker {
 		this.socket = io(url, ioConfig)
 			.on(SocketEvents.CONNECT, () => {
 				this.connected.set(true)
-				console.log("Getting contract information.")
 				const id = get(this.contractId)
 				this.socket.emit(SocketEvents.GET_CONTRACT, id)
 				// Backup timeout to close socket on the event

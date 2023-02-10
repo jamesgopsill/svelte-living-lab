@@ -5,8 +5,6 @@
 		InputGroup,
 		InputGroupText,
 		Button,
-		Row,
-		Col,
 		Icon,
 		Accordion,
 		AccordionItem,
@@ -226,16 +224,9 @@
 	>
 </FormGroup>
 
-<Row>
-	<Col>
-		<InputGroup size="sm">
-			<input class="form-control" type="file" bind:files />
-		</InputGroup>
-	</Col>
-	<Col>
-		<Button size="sm" color="primary" on:click={submitGcode}
-			>Submit G-Code</Button
-		>
-		<Button size="sm" color="danger" on:click={cancel}>Cancel Print</Button>
-	</Col>
-</Row>
+<InputGroup size="sm">
+	<input class="form-control" type="file" bind:files />
+	<Button size="sm" color="primary" on:click={submitGcode}>Submit G-Code</Button
+	>
+	<Button size="sm" color="danger" on:click={cancel}>Cancel Print</Button>
+</InputGroup>
