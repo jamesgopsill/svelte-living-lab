@@ -1,48 +1,28 @@
 <script lang="ts">
-	import {
-		Navbar,
-		NavbarBrand,
-		Container,
-		TabContent,
-		TabPane,
-	} from "sveltestrap"
-	import Job from "./Job.svelte"
-	import Machine from "./Machine.svelte"
-	import Settings from "./Settings.svelte"
-	//@ts-ignore
-	import logoUrl from "./assets/logo.png"
-	import epsrcUrl from "./assets/epsrc.png"
+	import Job from "./components/Job.svelte"
+	import Machine from "./machines/Machine.svelte"
+	import About from "./components/About.svelte"
+	import NavBar from "./components/NavBar.svelte"
+	import Track from "./components/Track.svelte"
+	import Settings from "./components/Settings.svelte"
+	import url from "./stores/url"
+	import Footer from "./components/Footer.svelte"
 </script>
 
-<Navbar color="light" light={true} expand="md" class="mb-1">
-	<NavbarBrand href="#">BAM Living Lab</NavbarBrand>
-</Navbar>
-
-<Container xxl>
-	<p class="text-center">
-			<img
-				alt=""
-				height="60"
-				src={logoUrl}
-			/>
-			&nbsp;
-			<img
-				alt=""
-				height="60"
-				class="mt-2"
-				src={epsrcUrl}
-			/>
-		</p>
-	<TabContent>
-		<TabPane class="mt-1" tabId="job" tab="Submit Job" active>
-			<Job />
-		</TabPane>
-		<TabPane class="mt-1" tabId="machine" tab="Connect a Machine">
-			<Machine />
-		</TabPane>
-		<TabPane class="mt-1" tabId="settings" tab="Settings">
-			<Settings />
-		</TabPane>
-	</TabContent>
-	<footer class="text-center"><hr/><p>👨‍💻 with 🧡 and ☕</p></footer>
-</Container>
+<NavBar />
+<div class="m-2">
+	{#if $url.hash === "" || $url.hash === "#/" || $url.hash === "#"}
+		<About />
+	{:else if $url.hash === "#/job"}
+		<Job />
+	{:else if $url.hash === "#/machine"}
+		<Machine />
+	{:else if $url.hash === "#/track"}
+		<Track />
+	{:else if $url.hash === "#/settings"}
+		<Settings />
+	{:else}
+		<h1>404</h1>
+	{/if}
+	<Footer />
+</div>

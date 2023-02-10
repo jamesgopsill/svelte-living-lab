@@ -20,9 +20,6 @@ python -m http.server
 
 Then go to your browser and enter `http://localhost:8000` into your address bar and you will be taken the website.
 
-
-
-
 ## For Development
 
 ```

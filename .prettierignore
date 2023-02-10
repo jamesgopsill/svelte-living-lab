@@ -1,1 +1,4 @@
 *.png
+scratch/
+docs/
+pnpm-lock.yml
